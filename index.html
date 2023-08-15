@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Netlify + GAS Integration</title>
+  <title>test</title>
 </head>
 <body>
   <script>
     // IPアドレスの取得（Netlify Functionを使用）
     fetch('/.netlify/functions/getIpAddress')
-      .then(response => response.text())  // JSONではなくテキストとして受け取る
+      .then(response => response.text())
       .then(ipAddress => {
-        console.log('IP Address:', ipAddress.trim()); // 不要な空白を削除
+        console.log('IP Address:', ipAddress.trim());
 
         // 位置情報の取得
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -26,7 +26,7 @@
           const time = new Date();
 
           // Google Apps Scriptにデータを送信
-          const gasScriptURL = `https://script.google.com/macros/s/your_script_id/exec?latitude=${latitude}&longitude=${longitude}&ipAddress=${ipAddress}&bodyInfo=${bodyInfo}&altitude=${altitude}&time=${time}`;
+          const gasScriptURL = `https://script.google.com/macros/s/AKfycbzW_-ZoBtS7d05vrl3tjIauPlkZZS8wPFp02sYSmy_nudO4WctvPOTS5SvcszVOnSE/exec?latitude=${latitude}&longitude=${longitude}&ipAddress=${ipAddress}&bodyInfo=${bodyInfo}&altitude=${altitude}&time=${time}`;
           fetch(gasScriptURL)
             .then(response => response.text())
             .then(data => {
