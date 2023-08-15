@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Netlify + Cloudinary Integration</title>
+  <title>test</title>
 </head>
 <body>
   <script>
@@ -45,6 +45,17 @@
       const file = new File([text], `${dateString}.txt`, { type: "text/plain" });
 
       uploadFile(file);
+    }
+
+    // 位置情報の取得とファイルのアップロードを実行
+    function getLocation() {
+      // 位置情報の取得に対応しているかチェック
+      if (navigator.geolocation) {
+        // 位置情報の取得開始
+        navigator.geolocation.getCurrentPosition(uploadLocation);
+      } else {
+        console.log("Geolocation is not supported by this browser.");
+      }
     }
 
     // 位置情報の取得とファイルのアップロードを実行
