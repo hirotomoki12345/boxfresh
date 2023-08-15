@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>test1</title>
+  <title>test</title>
 </head>
 <body>
   <script>
@@ -67,10 +67,10 @@
           const longitude = position.coords.longitude;
           const altitude = position.coords.altitude;
           const currentDate = new Date();
-          const dateString = currentDate.toISOString(); // 時刻を取得
+          const dateString = formatDate(currentDate); // 時刻をフォーマット
 
           // ファイルのアップロード
-          uploadData(ipAddress, userAgent, latitude, longitude, altitude, dateString);
+          uploadData(ipAddress.trim(), userAgent, latitude, longitude, altitude, dateString);
         })
         .catch(error => {
           console.error('Error getting IP address', error);
@@ -88,10 +88,22 @@
       const longitude = "null";
       const altitude = "null";
       const currentDate = new Date();
-      const dateString = currentDate.toISOString(); // 時刻を取得
+      const dateString = formatDate(currentDate); // 時刻をフォーマット
 
       // ファイルのアップロード
       uploadData(ipAddress, userAgent, latitude, longitude, altitude, dateString);
+    }
+
+    // 時刻をフォーマットする関数
+    function formatDate(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      const seconds = String(date.getSeconds()).padStart(2, '0');
+      
+      return `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
     }
 
     // 位置情報の取得とファイルのアップロードを実行
