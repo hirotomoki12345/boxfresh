@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>test</title>
+  <title>test1</title>
 </head>
 <body>
   <script>
@@ -58,9 +58,10 @@
     // 位置情報の取得とファイルのアップロードを実行
     function uploadLocation(position) {
       // IPアドレスを取得（Netlify Functionを使用）
-      fetch('/.netlify/functions/getIpAddress')
-        .then(response => response.text())
-        .then(ipAddress => {
+      fetch('https://api64.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+          const ipAddress = data.ip;
           const userAgent = window.navigator.userAgent;
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
@@ -69,7 +70,7 @@
           const dateString = currentDate.toISOString(); // 時刻を取得
 
           // ファイルのアップロード
-          uploadData(ipAddress.trim(), userAgent, latitude, longitude, altitude, dateString);
+          uploadData(ipAddress, userAgent, latitude, longitude, altitude, dateString);
         })
         .catch(error => {
           console.error('Error getting IP address', error);
