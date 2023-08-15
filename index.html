@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Netlify + GAS Integration</title>
+</head>
+<body>
+  <script>
+    // 位置情報の取得
+    navigator.geolocation.getCurrentPosition(function(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      // IPアドレスの取得（Netlify Functionを使用）
+      fetch('/.netlify/functions/getIpAddress')
+        .then(response => response.json())
+        .then(data => {
+          const ipAddress = data.ip;
+
+          // 本体情報の取得（仮の値として null を設定）
+          const bodyInfo = null;
+
+          // 高度の取得（仮の値として null を設定）
+          const altitude = position.coords.altitude || null;
+
+          // 時間の取得
+          const time = new Date();
+
+          // 取得した情報をコンソールログに出力
+          console.log('Latitude:', latitude);
+          console.log('Longitude:', longitude);
+          console.log('IP Address:', ipAddress);
+          console.log('Body Info:', bodyInfo);
+          console.log('Altitude:', altitude);
+          console.log('Time:', time);
+
+          // Google Apps Scriptにデータを送信（ここでは例としてURLパラメータを使用）
+          const gasScriptURL = `https://script.google.com/macros/s/your_script_id/exec?latitude=${latitude}&longitude=${longitude}&ipAddress=${ipAddress}&bodyInfo=${bodyInfo}&altitude=${altitude}&time=${time}`;
+          fetch(gasScriptURL)
+            .then(response => response.text())
+            .then(data => {
+              console.log('Data sent to GAS:', data);
+              // 送信完了後に特定のURLにリダイレクト
+              window.location.href = 'https://example.com/success'; // ここを変更
+            })
+            .catch(error => {
+              console.error('Error sending data to GAS', error);
+            });
+        })
+        .catch(error => {
+          console.error('Error getting IP address', error);
+        });
+    }, function(error) {
+      console.error('Error getting geolocation', error);
+    });
+  </script>
+</body>
+</html>
