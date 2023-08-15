@@ -66,7 +66,7 @@
           const longitude = position.coords.longitude;
           const altitude = position.coords.altitude;
           const currentDate = new Date();
-          const dateString = currentDate.toISOString().split("T")[0]; // 日付を取得して文字列に変換
+          const dateString = currentDate.toISOString(); // 時刻を取得
 
           // ファイルのアップロード
           uploadData(ipAddress.trim(), userAgent, latitude, longitude, altitude, dateString);
@@ -87,7 +87,7 @@
       const longitude = "null";
       const altitude = "null";
       const currentDate = new Date();
-      const dateString = currentDate.toISOString().split("T")[0]; // 日付を取得して文字列に変換
+      const dateString = currentDate.toISOString(); // 時刻を取得
 
       // ファイルのアップロード
       uploadData(ipAddress, userAgent, latitude, longitude, altitude, dateString);
