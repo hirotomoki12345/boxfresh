@@ -1,53 +1,90 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>質問データ取得と削除</title>
+  <title>質問箱</title>
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-  <style>
-    h1 { text-align: center; }
-    #get { margin: 10px auto; display: block; }
-    .list-group-item { margin: 5px 0; background-color: #f9f9f9; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
-    .section-header { cursor: pointer; font-weight: bold; }
-    .delete-button { color: red; cursor: pointer; float: right; }
-  </style>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+  }
+  h1 {
+    text-align: center;
+    font-size: 36px;
+    margin-top: 20px;
+    color: #333;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  .container {
+    margin: 20px auto;
+    max-width: 800px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  #get {
+    display: block;
+    margin: 20px auto;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  #get:hover {
+    background-color: #0056b3;
+  }
+  .list-group-item {
+    background-color: #ffffff;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px 0;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  .section-header {
+    cursor: pointer;
+    font-weight: bold;
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+  }
+  .delete-button {
+    color: red;
+    cursor: pointer;
+    float: right;
+    font-weight: bold;
+  }
+</style>
+
 </head>
 <body>
   <div class="container">
-    <h1>質問データ取得と削除</h1>
-    <button id="get" class="btn btn-primary">データ取得</button>
+    <h1>質問箱</h1>
+    <button id="get" class="btn btn-primary">取得</button>
     <div id="questions" class="mt-3">
-      <div class="section-header">質問データ</div>
+      <div class="section-header">質問</div>
       <div id="questionData" style="display: none;">
-        <ul class="list-group">
-          <!-- 質問データをここに表示 -->
-        </ul>
+        <ul class="list-group"></ul>
       </div>
     </div>
     <div id="ipInfo" class="mt-3">
-      <div class="section-header">IP情報</div>
-      <div id="ipInfoData" style="display: none;">
-        <!-- IP情報をここに表示 -->
-      </div>
+      <div class="section-header">informations</div>
+      <div id="ipInfoData" style="display: none;"></div>
     </div>
   </div>
   <script>
-    // Firebaseの設定
-    const config = {
-      apiKey: "AIzaSyDT5SdSajGPPTzgyZb-XO4xabAY6B0bewI",
-      authDomain: "hamanan-10983.firebaseapp.com",
-      databaseURL: "https://hamanan-10983-default-rtdb.firebaseio.com",
-      projectId: "hamanan-10983",
-      storageBucket: "hamanan-10983.appspot.com",
-      messagingSenderId: "181655797156",
-      appId: "1:181655797156:web:f1025f6db4772ba3539531"
-    };
-
-    // Firebaseを初期化
+    const config = { apiKey: "YOUR_API_KEY", authDomain: "YOUR_AUTH_DOMAIN", databaseURL: "YOUR_DATABASE_URL", projectId: "YOUR_PROJECT_ID", storageBucket: "YOUR_STORAGE_BUCKET", messagingSenderId: "YOUR_MESSAGING_SENDER_ID", appId: "YOUR_APP_ID" };
     firebase.initializeApp(config);
 
-    // クリックイベントを"データ取得"ボタンに追加
     document.getElementById('get').addEventListener('click', () => {
       const database = firebase.database();
       const questionsRef = database.ref('questions');
@@ -68,9 +105,7 @@
             deleteButton.classList.add('delete-button');
             deleteButton.textContent = '削除';
 
-            // 削除ボタンをクリックした際の処理
             deleteButton.addEventListener('click', () => {
-              // 削除したいデータのキーを取得
               var dataKey = questionId;
               const questionRef = database.ref(`questions/${dataKey}`);
               questionRef.remove()
@@ -114,7 +149,6 @@
           }
         }
 
-        // 折り畳み可能なセクションを設定
         const questionSection = document.getElementById('questions');
         const questionData = document.getElementById('questionData');
         questionSection.querySelector('.section-header').addEventListener('click', () => {
