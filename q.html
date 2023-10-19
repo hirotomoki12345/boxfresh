@@ -2,9 +2,8 @@
 <html>
 <head>
     <title>質問箱</title>
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
-
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
 </head>
 <body>
     <h1>質問箱</h1>
@@ -23,7 +22,22 @@
 </body>
 
 <script>
-  // Firebase Realtime Databaseへのデータ保存
+  // Firebaseの設定情報
+  const firebaseConfig = {
+  apiKey: "AIzaSyDT5SdSajGPPTzgyZb-XO4xabAY6B0bewI",
+  authDomain: "hamanan-10983.firebaseapp.com",
+  databaseURL: "https://hamanan-10983-default-rtdb.firebaseio.com",
+  projectId: "hamanan-10983",
+  storageBucket: "hamanan-10983.appspot.com",
+  messagingSenderId: "181655797156",
+  appId: "1:181655797156:web:f1025f6db4772ba3539531"
+  };
+
+  // Firebaseアプリを初期化
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Firebase Firestoreへのデータ保存
   document.getElementById("questionForm").addEventListener("submit", function (e) {
     e.preventDefault();
 
@@ -31,19 +45,12 @@
     const email = document.getElementById("email").value;
     const question = document.getElementById("question").value;
 
-    // Firebase Realtime Databaseにデータを保存
-    const database = getDatabase(app);
-    const dbRef = ref(database, "questions");
-
-    // 新しい質問データを作成
-    const newQuestion = {
+    // Firestoreの"questions"コレクションに新しいドキュメントを追加
+    addDoc(collection(db, "questions"), {
       name: name,
       email: email,
       question: question,
-    };
-
-    // データをpushメソッドを使ってデータベースに保存
-    push(dbRef, newQuestion)
+    })
       .then(() => {
         console.log("質問が送信されました。");
       })
