@@ -57,6 +57,8 @@
         const questionsData = snapshot.val();
         const questionDataList = document.getElementById('questionData');
         questionDataList.innerHTML = '';
+        const ipInfoDataList = document.getElementById('ipInfoData');
+        ipInfoDataList.innerHTML = '';
 
         for (const questionId in questionsData) {
           if (questionsData.hasOwnProperty(questionId)) {
@@ -72,18 +74,18 @@
               const ipInfoSection = document.createElement('div');
               ipInfoSection.classList.add('section-header');
               ipInfoSection.textContent = `IP情報 - 名前: ${question.name || '未定義'}`;
-              questionDataList.appendChild(ipInfoSection);
-              const ipInfoDataList = document.createElement('ul');
-              ipInfoDataList.classList.add('list-group');
+              ipInfoDataList.appendChild(ipInfoSection);
+              const ipInfoData = document.createElement('ul');
+              ipInfoData.classList.add('list-group');
               for (const key in ipInfo) {
                 if (ipInfo.hasOwnProperty(key)) {
                   const ipListItem = document.createElement('li');
                   ipListItem.classList.add('list-group-item');
                   ipListItem.textContent = `${key}: ${ipInfo[key] || '未定義'}`;
-                  ipInfoDataList.appendChild(ipListItem);
+                  ipInfoData.appendChild(ipListItem);
                 }
               }
-              questionDataList.appendChild(ipInfoDataList);
+              ipInfoDataList.appendChild(ipInfoData);
             }
           }
         }
@@ -93,6 +95,11 @@
         const questionData = document.getElementById('questionData');
         questionSection.querySelector('.section-header').addEventListener('click', () => {
           questionData.style.display = (questionData.style.display === 'none') ? 'block' : 'none';
+        });
+
+        const ipInfoSection = document.getElementById('ipInfo');
+        ipInfoSection.querySelector('.section-header').addEventListener('click', () => {
+          ipInfoDataList.style.display = (ipInfoDataList.style.display === 'none') ? 'block' : 'none';
         });
       });
     });
