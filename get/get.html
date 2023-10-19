@@ -73,14 +73,6 @@
               questionRef.remove()
                 .then(() => {
                   listItem.remove();
-                  const ipInfoRef = database.ref(`ipInfo/${questionId}`);
-                  ipInfoRef.remove()
-                    .then(() => {
-                      console.log('ipInfoも削除しました');
-                    })
-                    .catch((error) => {
-                      console.error('ipInfo削除エラー:', error);
-                    });
                 })
                 .catch((error) => {
                   console.error('削除エラー:', error);
@@ -97,7 +89,7 @@
         const questionSection = document.getElementById('questions');
         const questionData = document.getElementById('questionData');
         questionSection.querySelector('.section-header').addEventListener('click', () => {
-          questionData.style.display = (questionData.style.display === 'none') ? 'block' : 'none';
+          questionData.style display = (questionData.style.display === 'none') ? 'block' : 'none';
         });
 
         const ipInfoSection = document.getElementById('ipInfo');
