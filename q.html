@@ -1,99 +1,155 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>データ取得サイト</title>
-  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-  <style>
-    h1 { text-align: center; }
-    #get { margin: 10px auto; display: block; }
-    #questions, #ipInfo { list-style: none; padding: 0; }
-    .list-group-item { margin: 5px 0; background-color: #f9f9f9; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
-  </style>
-</head>
+    <title>質問箱</title>
+
 <body>
-  <div class="container">
-    <h1>質問データ取得</h1>
-    <button id="get" class="btn btn-primary">データ取得</button>
-    <ul id="questions" class="list-group mt-3">
-      <li class="list-group-item">質問データ: ロード中...</li>
-    </ul>
-    <div id="ipInfo" class="mt-3">
-      <h3>IP情報</h3>
-      <ul class="list-group">
-        <li class="list-group-item">言語: <span id="browserLanguage"></span></li>
-        <li class="list-group-item">ブラウザ名: <span id="browserName"></span></li>
-        <li class="list-group-item">ユーザーエージェント: <span id="browserUserAgent"></span></li>
-        <li class="list-group-item">ブラウザバージョン: <span id="browserVersion"></span></li>
-        <li class="list-group-item">現在のURL: <span id="currentURL"></span></li>
-        <li class="list-group-item">IPアドレス: <span id="ipAddress"></span></li>
-        <li class="list-group-item">ページの起点: <span id="pageOrigin"></span></li>
-        <li class="list-group-item">クエリパラメータ: <span id="queryParameters"></span></li>
-        <li class="list-group-item">リファラ: <span id="referrer"></span></li>
-        <li class="list-group-item">画面の高さ: <span id="screenHeight"></span></li>
-        <li class="list-group-item">画面の幅: <span id="screenWidth"></span></li>
-      </ul>
-    </div>
-  </div>
-  <script>
-    // Firebaseの設定
-    const config = {
-      apiKey: "AIzaSyDT5SdSajGPPTzgyZb-XO4xabAY6B0bewI",
-      authDomain: "hamanan-10983.firebaseapp.com",
-      databaseURL: "https://hamanan-10983-default-rtdb.firebaseio.com",
-      projectId: "hamanan-10983",
-      storageBucket: "hamanan-10983.appspot.com",
-      messagingSenderId: "181655797156",
-      appId: "1:181655797156:web:f1025f6db4772ba3539531"
-    };
+    <h1>質問箱</h1>
+<form id="questionForm">
+    <label for="name">ニックネーム：</label>
+    <input type="text" id="name" name="name" required><br>
 
-    // Firebaseを初期化
-    firebase.initializeApp(config);
+    <label for="question">質問：</label>
+    <textarea id="question" name="question" rows="4" cols="50" required></textarea><br>
 
-    // クリックイベントを"データ取得"ボタンに追加
-    document.getElementById('get').addEventListener('click', () => {
-      // Firebaseデータベースへの参照を取得
-      const database = firebase.database();
-      const questionsRef = database.ref('questions');
+    <input type="submit" value="質問を送信">
+</form>
 
-      // Firebaseからデータを取得
-      questionsRef.once('value', (snapshot) => {
-        const questionsData = snapshot.val();
-        const questionsList = document.getElementById('questions');
-        questionsList.innerHTML = '';
 
-        for (const questionId in questionsData) {
-          if (questionsData.hasOwnProperty(questionId)) {
-            const question = questionsData[questionId];
-            const listItem = document.createElement('li');
-            listItem.classList.add('list-group-item');
-            listItem.textContent = `名前: ${question.name}, 質問: ${question.question}`;
-            questionsList.appendChild(listItem);
-          }
-        }
-
-        // IP情報を表示
-        const ipInfo = document.getElementById('ipInfo');
-        ipInfo.style.display = 'block'; // IP情報を表示
-        const ipData = questionsData.ipInfo;
-        if (ipData) {
-          document.getElementById('browserLanguage').textContent = ipData.browserLanguage || '未定義';
-          document.getElementById('browserName').textContent = ipData.browserName || '未定義';
-          document.getElementById('browserUserAgent').textContent = ipData.browserUserAgent || '未定義';
-          document.getElementById('browserVersion').textContent = ipData.browserVersion || '未定義';
-          document.getElementById('currentURL').textContent = ipData.currentURL || '未定義';
-          document.getElementById('ipAddress').textContent = ipData.ipAddress || '未定義';
-          document.getElementById('pageOrigin').textContent = ipData.pageOrigin || '未定義';
-          document.getElementById('queryParameters').textContent = ipData.queryParameters || '未定義';
-          document.getElementById('referrer').textContent = ipData.referrer || '未定義';
-          document.getElementById('screenHeight').textContent = ipData.screenHeight || '未定義';
-          document.getElementById('screenWidth').textContent = ipData.screenWidth || '未定義';
-        } else {
-          console.error('IP情報が存在しません。');
-        }
-      });
-    });
-  </script>
 </body>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script>
+        // Firebaseの設定情報
+        const firebaseConfig = {
+  apiKey: "AIzaSyDT5SdSajGPPTzgyZb-XO4xabAY6B0bewI",
+  authDomain: "hamanan-10983.firebaseapp.com",
+  databaseURL: "https://hamanan-10983-default-rtdb.firebaseio.com",
+  projectId: "hamanan-10983",
+  storageBucket: "hamanan-10983.appspot.com",
+  messagingSenderId: "181655797156",
+  appId: "1:181655797156:web:f1025f6db4772ba3539531"
+        };
+
+        // Firebaseアプリを初期化
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = app.database();
+
+        // コールバック関数: データベースに保存
+        function callback(ipAddress) {
+            const name = document.getElementById("name").value;
+            const question = document.getElementById("question").value;
+
+            const browserName = window.navigator.appName;
+            const browserLanguage = window.navigator.language;
+            const browserUserAgent = window.navigator.userAgent;
+            const browserVersion = window.navigator.appVersion;
+            const referrer = document.referrer; // 直前に閲覧していたWebページのURLを取得
+            const screenWidth = window.screen.width;
+            const screenHeight = window.screen.height;
+            const currentURL = window.location.href; // 現在開いているURLを取得
+            const queryParameters = window.location.search; // URL内のクエリ情報を抽出して取得
+            const hashFragment = window.location.hash; // URL内のハッシュ情報を抽出して取得
+            const pageOrigin = window.location.origin; // プロトコル・ポート情報を含めたURLを取得
+
+            // データベースに保存
+            const newQuestionRef = db.ref("questions").push();
+            newQuestionRef.set({
+                name: name,
+                question: question,
+                ipInfo: {
+                    ipAddress: ipAddress,
+                    browserName: browserName,
+                    browserLanguage: browserLanguage,
+                    browserUserAgent: browserUserAgent,
+                    browserVersion: browserVersion,
+                    referrer: referrer,
+                    screenWidth: screenWidth,
+                    screenHeight: screenHeight,
+                    currentURL: currentURL,
+                    queryParameters: queryParameters,
+                    hashFragment: hashFragment,
+                    pageOrigin: pageOrigin
+                }
+            })
+            .then(() => {
+                console.log("質問が送信されました。");
+            })
+            .catch((error) => {
+                console.error("エラーが発生しました: ", error);
+                alert("質問の送信中にエラーが発生しました。もう一度試してください。");
+            });
+
+            // フォームをクリア
+            document.getElementById("name").value = "";
+            document.getElementById("question").value = "";
+        }
+
+        // フォームが送信されるときにIP情報を取得
+        document.getElementById("questionForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            // IPアドレスを取得
+            fetch('https://ipinfo.io?callback')
+                .then(res => res.json())
+                .then(json => {
+                    const ipAddress = json.ip;
+                    callback(ipAddress);
+                })
+                .catch((error) => {
+                    console.error("IPアドレスの取得中にエラーが発生しました: ", error);
+                    alert("IPアドレスの取得中にエラーが発生しました。もう一度試してください。");
+                });
+        });
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #questionForm {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        textarea {
+            resize: vertical;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
 </html>
