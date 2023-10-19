@@ -30,7 +30,6 @@
             margin-top: 10px;
         }
         input[type="text"],
-        input[type="email"],
         textarea {
             width: 100%;
             padding: 10px;
@@ -53,16 +52,12 @@
             background-color: #0056b3;
         }
     </style>
-    
 </head>
 <body>
     <h1>質問箱</h1>
     <form id="questionForm">
-        <label for="name">お名前：</label>
+        <label for="name">ニックネーム：</label>
         <input type="text" id="name" name="name" required><br>
-
-        <label for="email">メールアドレス：</label>
-        <input type="email" id="email" name="email" required><br>
 
         <label for="question">質問：</label>
         <textarea id="question" name="question" rows="4" cols="50" required></textarea><br>
@@ -91,14 +86,12 @@
     e.preventDefault();
 
     const name = document.getElementById("name").value;
-    const email = document.getElementById("email").value;
     const question = document.getElementById("question").value;
 
     // Databaseの"questions"ノードに新しいデータを追加
     const newQuestionRef = db.ref("questions").push();
     newQuestionRef.set({
       name: name,
-      email: email,
       question: question
     })
       .then(() => {
@@ -111,7 +104,6 @@
 
     // フォームをクリア
     document.getElementById("name").value = "";
-    document.getElementById("email").value = "";
     document.getElementById("question").value = "";
   });
 </script>
