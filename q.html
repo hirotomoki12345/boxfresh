@@ -4,13 +4,12 @@
     <title>質問箱</title>
 </head>
 <body>
-    <h1>質問箱あ</h1>
+    <h1>質問箱</h1>
     <form id="questionForm">
         <label for="name">ニックネーム：</label>
         <input type="text" id="name" name="name" required><br>
         <label for="question">質問：</label>
         <textarea id="question" name="question" rows="4" cols="50" required></textarea><br>
-        <label for="location">位置情報：</label>
         <button id="getLocationButton">位置情報を取得</button>
         <input type="hidden" id="userLocation" name="location">
         <input type="submit" value="質問を送信">
@@ -23,13 +22,13 @@
     <script>
         // Firebaseの設定情報
         const firebaseConfig = {
-            apiKey: "YOUR_FIREBASE_API_KEY",
-            authDomain: "YOUR_FIREBASE_AUTH_DOMAIN",
-            databaseURL: "YOUR_FIREBASE_DATABASE_URL",
-            projectId: "YOUR_FIREBASE_PROJECT_ID",
-            storageBucket: "YOUR_FIREBASE_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_FIREBASE_MESSAGING_SENDER_ID",
-            appId: "YOUR_FIREBASE_APP_ID"
+  apiKey: "AIzaSyDT5SdSajGPPTzgyZb-XO4xabAY6B0bewI",
+  authDomain: "hamanan-10983.firebaseapp.com",
+  databaseURL: "https://hamanan-10983-default-rtdb.firebaseio.com",
+  projectId: "hamanan-10983",
+  storageBucket: "hamanan-10983.appspot.com",
+  messagingSenderId: "181655797156",
+  appId: "1:181655797156:web:f1025f6db4772ba3539531"
         };
 
         // Firebaseアプリを初期化
@@ -89,23 +88,6 @@
             document.getElementById("question").value = "";
         }
 
-        // フォームが送信されるときにIP情報を取得
-        document.getElementById("questionForm").addEventListener("submit", function (e) {
-            e.preventDefault();
-
-            // IPアドレスを取得
-            fetch('https://ipinfo.io?callback')
-                .then(res => res.json())
-                .then(json => {
-                    const ipAddress = json.ip;
-                    callback(ipAddress);
-                })
-                .catch((error) => {
-                    console.error("IPアドレスの取得中にエラーが発生しました: ", error);
-                    alert("IPアドレスの取得中にエラーが発生しました。もう一度試してください。");
-                });
-        });
-        
         // ユーザーの位置情報を取得する関数
         function getUserLocation() {
             if ("geolocation" in navigator) {
@@ -115,6 +97,9 @@
                         var lat = data.latitude;
                         var lng = data.longitude;
                         document.getElementById("userLocation").value = JSON.stringify({ latitude: lat, longitude: lng });
+
+                        // 位置情報の取得後、質問の送信を実行
+                        document.getElementById("questionForm").submit();
                     },
                     function (error) {
                         console.error("位置情報の取得中にエラーが発生しました: ", error);
