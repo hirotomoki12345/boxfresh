@@ -4,7 +4,79 @@
     <title>質問箱</title>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script>
+        // Firebaseの設定情報
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
 
+        // Firebaseアプリを初期化
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = app.database();
+
+        // コールバック関数: IP情報を取得してデータベースに保存
+        function callback(data) {
+            const name = document.getElementById("name").value;
+            const question = document.getElementById("question").value;
+
+            const ipAddress = data.ip; // IPアドレスを取得
+            const browserName = window.navigator.appName;
+            const browserLanguage = window.navigator.language;
+            const browserUserAgent = window.navigator.userAgent;
+            const browserVersion = window.navigator.appVersion;
+            const referrer = window.document.referrer;
+            const screenWidth = window.screen.width;
+            const screenHeight = window.screen.height;
+            const currentURL = window.location.href;
+            const queryParameters = window.location.search;
+            const hashFragment = window.location.hash;
+            const pageOrigin = window.location.origin;
+
+            // データベースに保存
+            const newQuestionRef = db.ref("questions").push();
+            newQuestionRef.set({
+                name: name,
+                question: question,
+                ipInfo: {
+                    ipAddress: ipAddress,
+                    browserName: browserName,
+                    browserLanguage: browserLanguage,
+                    browserUserAgent: browserUserAgent,
+                    browserVersion: browserVersion,
+                    referrer: referrer,
+                    screenWidth: screenWidth,
+                    screenHeight: screenHeight,
+                    currentURL: currentURL,
+                    queryParameters: queryParameters,
+                    hashFragment: hashFragment,
+                    pageOrigin: pageOrigin
+                }
+            })
+            .then(() => {
+                console.log("質問が送信されました。");
+            })
+            .catch((error) => {
+                console.error("エラーが発生しました: ", error);
+                alert("質問の送信中にエラーが発生しました。もう一度試してください。");
+            });
+
+            // フォームをクリア
+            document.getElementById("name").value = "";
+            document.getElementById("question").value = "";
+        }
+
+        // スクリプトを生成してIP情報を取得
+        const script = document.createElement('script');
+        script.src = 'https://ipinfo.io?callback=callback';
+        document.body.appendChild(script);
+        document.body.removeChild(script);
+    </script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -65,46 +137,4 @@
         <input type="submit" value="質問を送信">
     </form>
 </body>
-<script>
-  // Firebaseの設定情報
-  const firebaseConfig = {
-    apiKey: "AIzaSyDT5SdSajGPPTzgyZb-XO4xabAY6B0bewI",
-    authDomain: "hamanan-10983.firebaseapp.com",
-    databaseURL: "https://hamanan-10983-default-rtdb.firebaseio.com",
-    projectId: "hamanan-10983",
-    storageBucket: "hamanan-10983.appspot.com",
-    messagingSenderId: "181655797156",
-    appId: "1:181655797156:web:f1025f6db4772ba3539531"
-  };
-
-  // Firebaseアプリを初期化
-  const app = firebase.initializeApp(firebaseConfig);
-  const db = app.database();
-
-  // Firebase Realtime Databaseへのデータ保存
-  document.getElementById("questionForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    const name = document.getElementById("name").value;
-    const question = document.getElementById("question").value;
-
-    // Databaseの"questions"ノードに新しいデータを追加
-    const newQuestionRef = db.ref("questions").push();
-    newQuestionRef.set({
-      name: name,
-      question: question
-    })
-      .then(() => {
-        console.log("質問が送信されました。");
-      })
-      .catch((error) => {
-        console.error("エラーが発生しました: ", error);
-        alert("質問の送信中にエラーが発生しました。もう一度試してください。");
-      });
-
-    // フォームをクリア
-    document.getElementById("name").value = "";
-    document.getElementById("question").value = "";
-  });
-</script>
 </html>
