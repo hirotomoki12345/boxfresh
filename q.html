@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>質問箱</title>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+
+</head>
+<body>
+    <h1>質問箱</h1>
+    <form id="questionForm">
+        <label for="name">お名前：</label>
+        <input type="text" id="name" name="name" required><br>
+
+        <label for="email">メールアドレス：</label>
+        <input type="email" id="email" name="email" required><br>
+
+        <label for="question">質問：</label>
+        <textarea id="question" name="question" rows="4" cols="50" required></textarea><br>
+
+        <input type="submit" value="質問を送信">
+    </form>
+</body>
+
+<script>
+  // Firebase Realtime Databaseへのデータ保存
+  document.getElementById("questionForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const question = document.getElementById("question").value;
+
+    // Firebase Realtime Databaseにデータを保存
+    const database = getDatabase(app);
+    const dbRef = ref(database, "questions");
+
+    // 新しい質問データを作成
+    const newQuestion = {
+      name: name,
+      email: email,
+      question: question,
+    };
+
+    // データをpushメソッドを使ってデータベースに保存
+    push(dbRef, newQuestion)
+      .then(() => {
+        console.log("質問が送信されました。");
+      })
+      .catch((error) => {
+        console.error("エラーが発生しました: ", error);
+      });
+
+    // フォームをクリア
+    document.getElementById("name").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("question").value = "";
+  });
+</script>
+</html>
