@@ -6,68 +6,63 @@
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 <style>
-/* フォント */
+/* 全体のスタイル */
+
 body {
   font-family: 'Noto Sans JP', sans-serif;
+  background-color: #fafafa; 
 }
 
 /* カード */
+
 .question-card {
-  background: #FFFFFF;
-  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-  border: 1px solid #DBDBDB;
+  background-color: #fff;
   border-radius: 10px;
-  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-bottom: 20px; 
 }
 
-/* 質問者情報 */  
+/* 質問者情報 */
+
 .question-user {
   display: flex;
-  align-items: center; 
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .user-icon {
-  width: 40px;
-  height: 40px;  
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  border: 1px solid #DBDBDB;
+  border: 2px solid #eee;
+  margin-right: 10px;
 }
 
 .user-name {
-  margin-left: 8px;
   font-weight: bold;
-}
+  font-size: 18px;
+  color: #0066cc;
+}  
 
 /* 質問文 */
+
 .question-text {
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.5;
+  margin-bottom: 10px;  
 }
 
 /* 投稿フォーム */
+
 .post-form {
-  background: #FAFAFA;
-  border: 1px solid #DBDBDB;
+  background-color: #f0f0f0;
+  padding: 20px;
   border-radius: 10px;
-  padding: 8px 16px;  
+  margin-top: 20px; 
 }
 
-.post-form input,
-.post-form button {
-  appearance: none;
-  border: none;
-  outline: none;
-  background: none;
-}
-
-.post-button {
-  color: #FFFFFF;
-  background: #0095F6;
-  border-radius: 6px;
-  padding: 8px 16px;
-  cursor: pointer;  
-}
-
+/* 各要素のスタイル */
 </style>  
 
 </head>
