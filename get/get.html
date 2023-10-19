@@ -11,14 +11,15 @@
 
   <button id="get">データ取得</button>
 
-  <p id="ipInfo">IP情報: Loading...</p>
-  <p id="browserInfo">ブラウザ情報: Loading...</p>
-  <p id="urlInfo">URL情報: Loading...</p>
+  <p id="ipInfo">IP情報: ロード中...</p>
+  <p id="browserInfo">ブラウザ情報: ロード中...</p>
+  <p id="urlInfo">URL情報: ロード中...</p>
+  <p id="otherInfo">その他の情報: ロード中...</p>
 
   <ul id="questions"></ul>
 
   <script>
-    // Initialize Firebase with your config
+    // Firebaseの設定
     const config = {
       apiKey: "AIzaSyDT5SdSajGPPTzgyZb-XO4xabAY6B0bewI",
       authDomain: "hamanan-10983.firebaseapp.com",
@@ -29,46 +30,38 @@
       appId: "1:181655797156:web:f1025f6db4772ba3539531"
     };
 
-    // Initialize Firebase
+    // Firebaseを初期化
     firebase.initializeApp(config);
     
-    // Get a reference to the Firebase database
+    // Firebaseデータベースへの参照を取得
     const database = firebase.database();
-    const questionsRef = database.ref('questions');
+    const questionsRef = database.ref('questions/-Nh6Am_RFQK-CCTHG887');
 
-    // Add a click event listener to the "データ取得" button
+    // クリックイベントを"データ取得"ボタンに追加
     document.getElementById('get').addEventListener('click', () => {
+      // Firebaseからデータを取得
       questionsRef.once('value', (snapshot) => {
-        const questions = snapshot.val();
-        const list = document.getElementById('questions');
-        list.innerHTML = '';
+        const data = snapshot.val();
 
-        for (let id in questions) {
-          if (questions.hasOwnProperty(id)) {
-            const q = questions[id];
-            const item = document.createElement('li');
-            item.textContent = q.name + ': ' + q.question;
-            list.appendChild(item);
-          }
-        }
+        // IP情報を表示
+        const ipInfo = document.getElementById('ipInfo');
+        ipInfo.textContent = 'IP情報: ' + data.ipInfo.ipAddress;
+
+        // ブラウザ情報を表示
+        const browserInfo = document.getElementById('browserInfo');
+        browserInfo.textContent = 'ブラウザ情報: ' + data.ipInfo.browserName;
+
+        // URL情報を表示
+        const urlInfo = document.getElementById('urlInfo');
+        urlInfo.textContent = 'URL情報: ' + data.ipInfo.currentURL;
+
+        // その他の情報を表示
+        const otherInfo = document.getElementById('otherInfo');
+        otherInfo.textContent = 'その他の情報: ' + 
+          'Browser Version: ' + data.ipInfo.browserVersion + ', ' +
+          'Screen Height: ' + data.screenHeight + ', ' +
+          'Screen Width: ' + data.screenWidth;
       });
-
-      // Fetch and display IP information
-      fetch('https://ipinfo.io/json')
-        .then(response => response.json())
-        .then(data => {
-          const ipInfo = document.getElementById('ipInfo');
-          ipInfo.textContent = 'IP情報: ' + data.ip + ' ' + data.city + ', ' + data.region + ', ' + data.country;
-        })
-        .catch(error => console.error('Error fetching IP info: ', error));
-
-      // Display browser information
-      const browserInfo = document.getElementById('browserInfo');
-      browserInfo.textContent = 'ブラウザ情報: ' + navigator.userAgent;
-
-      // Display URL information
-      const urlInfo = document.getElementById('urlInfo');
-      urlInfo.textContent = 'URL情報: ' + window.location.href;
     });
   </script>
 </body>
