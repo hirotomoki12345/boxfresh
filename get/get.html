@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>データ取得サイト</title>
+  <title>質問データ取得と削除</title>
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -10,11 +10,12 @@
     #get { margin: 10px auto; display: block; }
     .list-group-item { margin: 5px 0; background-color: #f9f9f9; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
     .section-header { cursor: pointer; font-weight: bold; }
+    .delete-button { color: red; cursor: pointer; float: right; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>質問データ取得</h1>
+    <h1>質問データ取得と削除</h1>
     <button id="get" class="btn btn-primary">データ取得</button>
     <div id="questions" class="mt-3">
       <div class="section-header">質問データ</div>
@@ -25,7 +26,7 @@
       </div>
     </div>
     <div id="ipInfo" class="mt-3">
-      <div class="section-header">informations</div>
+      <div class="section-header">IP情報</div>
       <div id="ipInfoData" style="display: none;">
         <!-- IP情報をここに表示 -->
       </div>
@@ -48,11 +49,8 @@
 
     // クリックイベントを"データ取得"ボタンに追加
     document.getElementById('get').addEventListener('click', () => {
-      // Firebaseデータベースへの参照を取得
       const database = firebase.database();
       const questionsRef = database.ref('questions');
-
-      // Firebaseからデータを取得
       questionsRef.once('value', (snapshot) => {
         const questionsData = snapshot.val();
         const questionDataList = document.getElementById('questionData');
@@ -65,11 +63,37 @@
             const question = questionsData[questionId];
             const listItem = document.createElement('li');
             listItem.classList.add('list-group-item');
-            listItem.textContent = `名前: ${question.name || '未定義'}, 質問: ${question.question || '未定義'}`;
+            listItem.innerHTML = `名前: ${question.name || '未定義'}, 質問: ${question.question || '未定義'}`;
+            const deleteButton = document.createElement('span');
+            deleteButton.classList.add('delete-button');
+            deleteButton.textContent = '削除';
+
+            // 削除ボタンをクリックした際の処理
+            deleteButton.addEventListener('click', () => {
+              // 削除したいデータのキーを取得
+              var dataKey = questionId;
+              const questionRef = database.ref(`questions/${dataKey}`);
+              questionRef.remove()
+                .then(() => {
+                  listItem.remove();
+                  const ipInfoRef = database.ref(`ipInfo/${dataKey}`);
+                  ipInfoRef.remove()
+                    .then(() => {
+                      console.log('データとIP情報が削除されました');
+                    })
+                    .catch((error) => {
+                      console.error('IP情報の削除中にエラーが発生しました:', error);
+                    });
+                })
+                .catch((error) => {
+                  console.error('データの削除中にエラーが発生しました:', error);
+                });
+            });
+
+            listItem.appendChild(deleteButton);
             questionDataList.appendChild(listItem);
 
             if (question.ipInfo) {
-              // IP情報が存在する場合、名前ごとに表示
               const ipInfo = question.ipInfo;
               const ipInfoSection = document.createElement('div');
               ipInfoSection.classList.add('section-header');
@@ -98,8 +122,9 @@
         });
 
         const ipInfoSection = document.getElementById('ipInfo');
+        const ipInfoData = document.getElementById('ipInfoData');
         ipInfoSection.querySelector('.section-header').addEventListener('click', () => {
-          ipInfoDataList.style.display = (ipInfoDataList.style.display === 'none') ? 'block' : 'none';
+          ipInfoData.style.display = (ipInfoData.style.display === 'none') ? 'block' : 'none';
         });
       });
     });
