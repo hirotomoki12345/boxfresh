@@ -56,6 +56,7 @@
       // Firebaseデータベースへの参照を取得
       const database = firebase.database();
       const questionsRef = database.ref('questions');
+      const ipInfoRef = questionsRef.child('-Nh6Am_RFQK-CCTHG887/ipInfo');
 
       // Firebaseからデータを取得
       questionsRef.once('value', (snapshot) => {
@@ -76,8 +77,9 @@
         // IP情報を表示
         const ipInfo = document.getElementById('ipInfo');
         ipInfo.style.display = 'block'; // IP情報を表示
-        const ipData = questionsData.ipInfo;
-        if (ipData) {
+
+        if (questionsData && questionsData.ipInfo) {
+          const ipData = questionsData.ipInfo;
           document.getElementById('browserLanguage').textContent = ipData.browserLanguage || '未定義';
           document.getElementById('browserName').textContent = ipData.browserName || '未定義';
           document.getElementById('browserUserAgent').textContent = ipData.browserUserAgent || '未定義';
