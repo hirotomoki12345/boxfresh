@@ -67,17 +67,26 @@
             deleteButton.classList.add('delete-button');
             deleteButton.textContent = '削除';
 
-            // 削除ボタンをクリックした際の処理
-            deleteButton.addEventListener('click', () => {
-              const questionRef = database.ref(`questions/${questionId}`);
-              questionRef.remove()
-                .then(() => {
-                  listItem.remove();
-                })
-                .catch((error) => {
-                  console.error('削除エラー:', error);
-                });
-            });
+// 削除ボタンをクリックした際の処理
+deleteButton.addEventListener('click', () => {
+  const questionRef = database.ref(`questions/${questionId}`);
+  questionRef.remove()
+    .then(() => {
+      listItem.remove();
+      const ipInfoRef = database.ref(`ipInfo/${questionId}`);
+      ipInfoRef.remove()
+        .then(() => {
+          console.log('ipInfoも削除しました');
+        })
+        .catch((error) => {
+          console.error('ipInfo削除エラー:', error);
+        });
+    })
+    .catch((error) => {
+      console.error('削除エラー:', error);
+    });
+});
+
 
             listItem.appendChild(deleteButton);
             listItem.innerHTML += ` 名前: ${question.name || '未定義'}, 質問: ${question.question || '未定義'}`;
