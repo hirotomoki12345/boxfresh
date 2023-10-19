@@ -8,32 +8,29 @@
   <style>
     h1 { text-align: center; }
     #get { margin: 10px auto; display: block; }
-    #questions, #ipInfo { list-style: none; padding: 0; }
     .list-group-item { margin: 5px 0; background-color: #f9f9f9; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    .section-header { cursor: pointer; font-weight: bold; }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>質問データ取得</h1>
     <button id="get" class="btn btn-primary">データ取得</button>
-    <ul id="questions" class="list-group mt-3">
-      <li class="list-group-item">質問データ: ロード中...</li>
-    </ul>
+    <div id="questions" class="mt-3">
+      <div class="section-header">質問データ</div>
+      <div id="questionData" style="display: none;">
+        <ul class="list-group">
+          <!-- 質問データをここに表示 -->
+        </ul>
+      </div>
+    </div>
     <div id="ipInfo" class="mt-3">
-      <h3>IP情報</h3>
-      <ul class="list-group">
-        <li class="list-group-item">言語: <span id="browserLanguage"></span></li>
-        <li class="list-group-item">ブラウザ名: <span id="browserName"></span></li>
-        <li class="list-group-item">ユーザーエージェント: <span id="browserUserAgent"></span></li>
-        <li class="list-group-item">ブラウザバージョン: <span id="browserVersion"></span></li>
-        <li class="list-group-item">現在のURL: <span id="currentURL"></span></li>
-        <li class="list-group-item">IPアドレス: <span id="ipAddress"></span></li>
-        <li class="list-group-item">ページの起点: <span id="pageOrigin"></span></li>
-        <li class="list-group-item">クエリパラメータ: <span id="queryParameters"></span></li>
-        <li class="list-group-item">リファラ: <span id="referrer"></span></li>
-        <li class="list-group-item">画面の高さ: <span id="screenHeight"></span></li>
-        <li class="list-group-item">画面の幅: <span id="screenWidth"></span></li>
-      </ul>
+      <div class="section-header">IP情報</div>
+      <div id="ipInfoData" style="display: none;">
+        <ul class="list-group">
+          <!-- IP情報をここに表示 -->
+        </ul>
+      </div>
     </div>
   </div>
   <script>
@@ -61,8 +58,10 @@
       // Firebaseからデータを取得
       questionsRef.once('value', (snapshot) => {
         const questionsData = snapshot.val();
-        const questionsList = document.getElementById('questions');
-        questionsList.innerHTML = '';
+        const questionDataList = document.getElementById('questionData');
+        const ipInfoDataList = document.getElementById('ipInfoData');
+        questionDataList.innerHTML = '';
+        ipInfoDataList.innerHTML = '';
 
         for (const questionId in questionsData) {
           if (questionsData.hasOwnProperty(questionId)) {
@@ -70,32 +69,38 @@
             const listItem = document.createElement('li');
             listItem.classList.add('list-group-item');
             listItem.textContent = `名前: ${question.name || '未定義'}, 質問: ${question.question || '未定義'}`;
-            questionsList.appendChild(listItem);
+            questionDataList.appendChild(listItem);
           }
         }
 
         // IP情報を表示
-        const ipInfo = document.getElementById('ipInfo');
-        ipInfo.style.display = 'block'; // IP情報を表示
-
         if (ipInfoRef) {
           ipInfoRef.once('value', (snapshot) => {
             const ipData = snapshot.val();
-            document.getElementById('browserLanguage').textContent = ipData.browserLanguage || '未定義';
-            document.getElementById('browserName').textContent = ipData.browserName || '未定義';
-            document.getElementById('browserUserAgent').textContent = ipData.browserUserAgent || '未定義';
-            document.getElementById('browserVersion').textContent = ipData.browserVersion || '未定義';
-            document.getElementById('currentURL').textContent = ipData.currentURL || '未定義';
-            document.getElementById('ipAddress').textContent = ipData.ipAddress || '未定義';
-            document.getElementById('pageOrigin').textContent = ipData.pageOrigin || '未定義';
-            document.getElementById('queryParameters').textContent = ipData.queryParameters || '未定義';
-            document.getElementById('referrer').textContent = ipData.referrer || '未定義';
-            document.getElementById('screenHeight').textContent = ipData.screenHeight || '未定義';
-            document.getElementById('screenWidth').textContent = ipData.screenWidth || '未定義';
+            for (const key in ipData) {
+              if (ipData.hasOwnProperty(key)) {
+                const listItem = document.createElement('li');
+                listItem.classList.add('list-group-item');
+                listItem.textContent = `${key}: ${ipData[key] || '未定義'}`;
+                ipInfoDataList.appendChild(listItem);
+              }
+            }
           });
         } else {
           console.error('IP情報が存在しません。');
         }
+
+        // 折り畳み可能なセクションを設定
+        const questionSection = document.getElementById('questions');
+        const ipInfoSection = document.getElementById('ipInfo');
+        const questionData = document.getElementById('questionData');
+        const ipInfoData = document.getElementById('ipInfoData');
+        questionSection.querySelector('.section-header').addEventListener('click', () => {
+          questionData.style.display = (questionData.style.display === 'none') ? 'block' : 'none';
+        });
+        ipInfoSection.querySelector('.section-header').addEventListener('click', () => {
+          ipInfoData.style.display = (ipInfoData.style.display === 'none') ? 'block' : 'none';
+        });
       });
     });
   </script>
