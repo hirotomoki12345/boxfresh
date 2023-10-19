@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>データ取得サイト</title>
+  <title>質問データ取得と削除</title>
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -15,7 +15,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>質問データ取得</h1>
+    <h1>質問データ取得と削除</h1>
     <button id="get" class="btn btn-primary">データ取得</button>
     <div id="questions" class="mt-3">
       <div class="section-header">質問データ</div>
@@ -49,11 +49,8 @@
 
     // クリックイベントを"データ取得"ボタンに追加
     document.getElementById('get').addEventListener('click', () => {
-      // Firebaseデータベースへの参照を取得
       const database = firebase.database();
       const questionsRef = database.ref('questions');
-
-      // Firebaseからデータを取得
       questionsRef.once('value', (snapshot) => {
         const questionsData = snapshot.val();
         const questionDataList = document.getElementById('questionData');
@@ -69,18 +66,13 @@
             const deleteButton = document.createElement('span');
             deleteButton.classList.add('delete-button');
             deleteButton.textContent = '削除';
-            
+
             // 削除ボタンをクリックした際の処理
             deleteButton.addEventListener('click', () => {
-              // 削除処理を追加
-                console.log('削除ボタンがクリックされました');
-
               const questionRef = database.ref(`questions/${questionId}`);
               questionRef.remove()
                 .then(() => {
-                  // 削除に成功した場合の処理
                   listItem.remove();
-                  // 関連するipInfoも削除
                   const ipInfoRef = database.ref(`questions/${questionId}/ipInfo`);
                   ipInfoRef.remove()
                     .then(() => {
@@ -94,12 +86,12 @@
                   console.error('削除エラー:', error);
                 });
             });
+
             listItem.appendChild(deleteButton);
             listItem.innerHTML += ` 名前: ${question.name || '未定義'}, 質問: ${question.question || '未定義'}`;
             questionDataList.appendChild(listItem);
 
             if (question.ipInfo) {
-              // IP情報が存在する場合、名前ごとに表示
               const ipInfo = question.ipInfo;
               const ipInfoSection = document.createElement('div');
               ipInfoSection.classList.add('section-header');
