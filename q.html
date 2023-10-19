@@ -2,6 +2,22 @@
 <html>
 <head>
     <title>質問箱</title>
+
+<body>
+    <h1>質問箱</h1>
+<form id="questionForm">
+    <label for="name">ニックネーム：</label>
+    <input type="text" id="name" name="name" required><br>
+
+    <label for="question">質問：</label>
+    <textarea id="question" name="question" rows="4" cols="50" required></textarea><br>
+
+    <input type="submit" value="質問を送信">
+</form>
+
+
+</body>
+    
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
     <script>
@@ -135,18 +151,5 @@
         }
     </style>
 </head>
-<body>
-    <h1>質問箱</h1>
-<form id="questionForm">
-    <label for="name">ニックネーム：</label>
-    <input type="text" id="name" name="name" required><br>
 
-    <label for="question">質問：</label>
-    <textarea id="question" name="question" rows="4" cols="50" required></textarea><br>
-
-    <input type="submit" value="質問を送信">
-</form>
-
-
-</body>
 </html>
