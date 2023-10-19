@@ -5,81 +5,37 @@
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <style>
+    h1 { text-align: center; }
+    #get { margin: 10px auto; display: block; }
+    #questions, #ipInfo { list-style: none; padding: 0; }
+    .list-group-item { margin: 5px 0; background-color: #f9f9f9; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+  </style>
 </head>
 <body>
-
   <div class="container">
     <h1>質問データ取得</h1>
-
     <button id="get" class="btn btn-primary">データ取得</button>
-
-    <div class="card mt-3">
-      <div class="card-header" id="ipHeading">
-        <h2 class="mb-0">
-          <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#ipCollapse" aria-expanded="true" aria-controls="ipCollapse">
-            IP情報
-          </button>
-        </h2>
-      </div>
-
-      <div id="ipCollapse" class="collapse" aria-labelledby="ipHeading">
-        <div class="card-body">
-          <p id="ipInfo">IP情報: ロード中...</p>
-        </div>
-      </div>
+    <ul id="questions" class="list-group mt-3">
+      <li class="list-group-item">質問データ: ロード中...</li>
+    </ul>
+    <div id="ipInfo" class="mt-3">
+      <h3>IP情報</h3>
+      <ul class="list-group">
+        <li class="list-group-item">言語: <span id="browserLanguage"></span></li>
+        <li class="list-group-item">ブラウザ名: <span id="browserName"></span></li>
+        <li class="list-group-item">ユーザーエージェント: <span id="browserUserAgent"></span></li>
+        <li class="list-group-item">ブラウザバージョン: <span id="browserVersion"></span></li>
+        <li class="list-group-item">現在のURL: <span id="currentURL"></span></li>
+        <li class="list-group-item">IPアドレス: <span id="ipAddress"></span></li>
+        <li class="list-group-item">ページの起点: <span id="pageOrigin"></span></li>
+        <li class="list-group-item">クエリパラメータ: <span id="queryParameters"></span></li>
+        <li class="list-group-item">リファラ: <span id="referrer"></span></li>
+        <li class="list-group-item">画面の高さ: <span id="screenHeight"></span></li>
+        <li class="list-group-item">画面の幅: <span id="screenWidth"></span></li>
+      </ul>
     </div>
-
-    <div class="card mt-3">
-      <div class="card-header" id="browserHeading">
-        <h2 class="mb-0">
-          <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#browserCollapse" aria-expanded="true" aria-controls="browserCollapse">
-            ブラウザ情報
-          </button>
-        </h2>
-      </div>
-
-      <div id="browserCollapse" class="collapse" aria-labelledby="browserHeading">
-        <div class="card-body">
-          <p id="browserInfo">ブラウザ情報: ロード中...</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="card mt-3">
-      <div class="card-header" id="urlHeading">
-        <h2 class="mb-0">
-          <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#urlCollapse" aria-expanded="true" aria-controls="urlCollapse">
-            URL情報
-          </button>
-        </h2>
-      </div>
-
-      <div id="urlCollapse" class="collapse" aria-labelledby="urlHeading">
-        <div class="card-body">
-          <p id="urlInfo">URL情報: ロード中...</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="card mt-3">
-      <div class="card-header" id="otherHeading">
-        <h2 class="mb-0">
-          <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#otherCollapse" aria-expanded="true" aria-controls="otherCollapse">
-            その他の情報
-          </button>
-        </h2>
-      </div>
-
-      <div id="otherCollapse" class="collapse" aria-labelledby="otherHeading">
-        <div class="card-body">
-          <p id="otherInfo">その他の情報: ロード中...</p>
-        </div>
-      </div>
-    </div>
-
-    <ul id="questions" class="list-group mt-3"></ul>
   </div>
-
   <script>
     // Firebaseの設定
     const config = {
@@ -94,16 +50,50 @@
 
     // Firebaseを初期化
     firebase.initializeApp(config);
-    
-    // Firebaseデータベースへの参照を取得
-    const database = firebase.database();
-    const questionsRef = database.ref('questions/-Nh6Am_RFQK-CCTHG887');
 
     // クリックイベントを"データ取得"ボタンに追加
     document.getElementById('get').addEventListener('click', () => {
+      // Firebaseデータベースへの参照を取得
+      const database = firebase.database();
+      const questionsRef = database.ref('questions');
+
       // Firebaseからデータを取得
       questionsRef.once('value', (snapshot) => {
-        const data = snapshot.val();
+        const questionsData = snapshot.val();
+        const questionsList = document.getElementById('questions');
+        questionsList.innerHTML = '';
+
+        for (const questionId in questionsData) {
+          if (questionsData.hasOwnProperty(questionId)) {
+            const question = questionsData[questionId];
+            const listItem = document.createElement('li');
+            listItem.classList.add('list-group-item');
+            listItem.textContent = `名前: ${question.name || '未定義'}, 質問: ${question.question || '未定義'}`;
+            questionsList.appendChild(listItem);
+          }
+        }
 
         // IP情報を表示
-        const ipInfo = document.getElementById('
+        const ipInfo = document.getElementById('ipInfo');
+        ipInfo.style.display = 'block'; // IP情報を表示
+        const ipData = questionsData.ipInfo;
+        if (ipData) {
+          document.getElementById('browserLanguage').textContent = ipData.browserLanguage || '未定義';
+          document.getElementById('browserName').textContent = ipData.browserName || '未定義';
+          document.getElementById('browserUserAgent').textContent = ipData.browserUserAgent || '未定義';
+          document.getElementById('browserVersion').textContent = ipData.browserVersion || '未定義';
+          document.getElementById('currentURL').textContent = ipData.currentURL || '未定義';
+          document.getElementById('ipAddress').textContent = ipData.ipAddress || '未定義';
+          document.getElementById('pageOrigin').textContent = ipData.pageOrigin || '未定義';
+          document.getElementById('queryParameters').textContent = ipData.queryParameters || '未定義';
+          document.getElementById('referrer').textContent = ipData.referrer || '未定義';
+          document.getElementById('screenHeight').textContent = ipData.screenHeight || '未定義';
+          document.getElementById('screenWidth').textContent = ipData.screenWidth || '未定義';
+        } else {
+          console.error('IP情報が存在しません。');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
