@@ -73,6 +73,8 @@
             // 削除ボタンをクリックした際の処理
             deleteButton.addEventListener('click', () => {
               // 削除処理を追加
+                console.log('削除ボタンがクリックされました');
+
               const questionRef = database.ref(`questions/${questionId}`);
               questionRef.remove()
                 .then(() => {
