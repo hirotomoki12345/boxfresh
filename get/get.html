@@ -3,7 +3,7 @@
 <head>
   <title>データ取得サイト</title>
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
 </head>
 <body>
 
@@ -13,46 +13,42 @@
 
   <ul id="questions"></ul>
 
+  <script>
+    // Initialize Firebase with your config
+    const config = {
+      apiKey: "AIzaSyDT5SdSajGPPTzgyZb-XO4xabAY6B0bewI",
+      authDomain: "hamanan-10983.firebaseapp.com",
+      databaseURL: "https://hamanan-10983-default-rtdb.firebaseio.com",
+      projectId: "hamanan-10983",
+      storageBucket: "hamanan-10983.appspot.com",
+      messagingSenderId: "181655797156",
+      appId: "1:181655797156:web:f1025f6db4772ba3539531"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(config);
+    
+    // Get a reference to the Firebase database
+    const database = firebase.database();
+    const questionsRef = database.ref('questions');
+
+    // Add a click event listener to the "データ取得" button
+    document.getElementById('get').addEventListener('click', () => {
+      questionsRef.once('value', (snapshot) => {
+        const questions = snapshot.val();
+        const list = document.getElementById('questions');
+        list.innerHTML = '';
+
+        for (let id in questions) {
+          if (questions.hasOwnProperty(id)) {
+            const q = questions[id];
+            const item = document.createElement('li');
+            item.textContent = q.name + ': ' + q.question;
+            list.appendChild(item);
+          }
+        }
+      });
+    });
+  </script>
 </body>
-
-<script>
-
-// 質問箱サイトのFirebaseデータベース設定
-const config = {
-  apiKey: "AIzaSyDT5SdSajGPPTzgyZb-XO4xabAY6B0bewI",
-  authDomain: "hamanan-10983.firebaseapp.com",
-  databaseURL: "https://hamanan-10983-default-rtdb.firebaseio.com",
-  projectId: "hamanan-10983",
-  storageBucket: "hamanan-10983.appspot.com",
-  messagingSenderId: "181655797156",
-  appId: "1:181655797156:web:f1025f6db4772ba3539531"};
-
-// Firebaseアプリ初期化
-const app = firebase.initializeApp(config);
-const db = app.database();
-const questionsRef = db.ref('questions');
-
-// データ取得ボタンにクリックイベント
-document.getElementById('get').addEventListener('click', () => {
-
-questionsRef.once('value').then(snapshot => {
-
-  snapshot.forEach(childSnapshot => {
-  
-    const id = childSnapshot.key;
-    const question = childSnapshot.val();
-    const ipInfo = question.ipInfo;
-
-    // 位置情報などはここで参照できる
-    console.log(ipInfo.ipAddress); 
-
-    const item = document.createElement('li');
-    item.textContent = question.name + ': ' + question.question;
-    list.appendChild(item);
-  
-  });
-
-});
-
-</script>
 </html>
