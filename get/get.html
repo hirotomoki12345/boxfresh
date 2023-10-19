@@ -5,6 +5,32 @@
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <style>
+    /* ヘッダータイトルのスタイル */
+    h1 {
+      text-align: center;
+    }
+
+    /* データ取得ボタンのスタイル */
+    #get {
+      margin: 10px auto;
+      display: block;
+    }
+
+    /* 質問リストのスタイル */
+    #questions {
+      list-style: none;
+      padding: 0;
+    }
+
+    .list-group-item {
+      margin: 5px 0;
+      background-color: #f9f9f9;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+  </style>
 </head>
 <body>
 
@@ -16,6 +42,8 @@
     <ul id="questions" class="list-group mt-3">
       <li class="list-group-item">質問データ: ロード中...</li>
     </ul>
+
+    <p id="ipInfo" class="mt-3">IP情報: ロード中...</p>
   </div>
 
   <script>
@@ -54,6 +82,10 @@
             questionsList.appendChild(listItem);
           }
         }
+
+        // IP情報を表示
+        const ipInfo = document.getElementById('ipInfo');
+        ipInfo.textContent = `IP情報: ${questionsData.ipInfo.ipAddress}`;
       });
     });
   </script>
