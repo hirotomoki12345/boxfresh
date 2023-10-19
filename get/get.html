@@ -11,6 +11,10 @@
 
   <button id="get">データ取得</button>
 
+  <p id="ipInfo">IP情報: Loading...</p>
+  <p id="browserInfo">ブラウザ情報: Loading...</p>
+  <p id="urlInfo">URL情報: Loading...</p>
+
   <ul id="questions"></ul>
 
   <script>
@@ -48,6 +52,23 @@
           }
         }
       });
+
+      // Fetch and display IP information
+      fetch('https://ipinfo.io/json')
+        .then(response => response.json())
+        .then(data => {
+          const ipInfo = document.getElementById('ipInfo');
+          ipInfo.textContent = 'IP情報: ' + data.ip + ' ' + data.city + ', ' + data.region + ', ' + data.country;
+        })
+        .catch(error => console.error('Error fetching IP info: ', error));
+
+      // Display browser information
+      const browserInfo = document.getElementById('browserInfo');
+      browserInfo.textContent = 'ブラウザ情報: ' + navigator.userAgent;
+
+      // Display URL information
+      const urlInfo = document.getElementById('urlInfo');
+      urlInfo.textContent = 'URL情報: ' + window.location.href;
     });
   </script>
 </body>
