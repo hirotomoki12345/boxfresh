@@ -4,19 +4,19 @@
   <title>データ取得サイト</title>
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 <body>
 
-  <h1>質問データ取得</h1>
+  <div class="container">
+    <h1>質問データ取得</h1>
 
-  <button id="get">データ取得</button>
+    <button id="get" class="btn btn-primary">データ取得</button>
 
-  <p id="ipInfo">IP情報: ロード中...</p>
-  <p id="browserInfo">ブラウザ情報: ロード中...</p>
-  <p id="urlInfo">URL情報: ロード中...</p>
-  <p id="otherInfo">その他の情報: ロード中...</p>
-
-  <ul id="questions"></ul>
+    <ul id="questions" class="list-group mt-3">
+      <li class="list-group-item">質問データ: ロード中...</li>
+    </ul>
+  </div>
 
   <script>
     // Firebaseの設定
@@ -35,32 +35,25 @@
     
     // Firebaseデータベースへの参照を取得
     const database = firebase.database();
-    const questionsRef = database.ref('questions/-Nh6Am_RFQK-CCTHG887');
+    const questionsRef = database.ref('questions');
 
     // クリックイベントを"データ取得"ボタンに追加
     document.getElementById('get').addEventListener('click', () => {
       // Firebaseからデータを取得
       questionsRef.once('value', (snapshot) => {
-        const data = snapshot.val();
+        const questionsData = snapshot.val();
+        const questionsList = document.getElementById('questions');
+        questionsList.innerHTML = '';
 
-        // IP情報を表示
-        const ipInfo = document.getElementById('ipInfo');
-        ipInfo.textContent = 'IP情報: ' + data.ipInfo.ipAddress;
-
-        // ブラウザ情報を表示
-        const browserInfo = document.getElementById('browserInfo');
-        browserInfo.textContent = 'ブラウザ情報: ' + data.ipInfo.browserName;
-
-        // URL情報を表示
-        const urlInfo = document.getElementById('urlInfo');
-        urlInfo.textContent = 'URL情報: ' + data.ipInfo.currentURL;
-
-        // その他の情報を表示
-        const otherInfo = document.getElementById('otherInfo');
-        otherInfo.textContent = 'その他の情報: ' + 
-          'Browser Version: ' + data.ipInfo.browserVersion + ', ' +
-          'Screen Height: ' + data.screenHeight + ', ' +
-          'Screen Width: ' + data.screenWidth;
+        for (const questionId in questionsData) {
+          if (questionsData.hasOwnProperty(questionId)) {
+            const question = questionsData[questionId];
+            const listItem = document.createElement('li');
+            listItem.classList.add('list-group-item');
+            listItem.textContent = `名前: ${question.name}, 質問: ${question.question}`;
+            questionsList.appendChild(listItem);
+          }
+        }
       });
     });
   </script>
