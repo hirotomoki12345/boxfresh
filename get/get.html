@@ -77,6 +77,7 @@ h1 {
 }
 
 .user-name {
+  margin-bottom: 5px;
   font-size: 18px;
   font-weight: bold;
   color: #333;
@@ -190,7 +191,10 @@ h1 {
             const question = questionsData[questionId];
             const listItem = document.createElement('li');
             listItem.classList.add('list-group-item');
-            listItem.innerHTML = `名前: ${question.name || '未定義'}, 質問: ${question.question || '未定義'}`;
+            listItem.innerHTML = `
+  <div class="user-name">名前: ${question.name || '未定義'}</div>
+  <div class="question-text">質問: ${question.question || '未定義'}</div>
+`;
             const deleteButton = document.createElement('span');
             deleteButton.classList.add('delete-button');
             deleteButton.textContent = '削除';
