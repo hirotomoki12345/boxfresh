@@ -73,7 +73,7 @@
               questionRef.remove()
                 .then(() => {
                   listItem.remove();
-                  const ipInfoRef = database.ref(`questions/${questionId}/ipInfo`);
+                  const ipInfoRef = database.ref(`questions/${questionId}`);
                   ipInfoRef.remove()
                     .then(() => {
                       console.log('ipInfoも削除しました');
