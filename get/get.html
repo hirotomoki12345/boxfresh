@@ -43,7 +43,22 @@
       <li class="list-group-item">質問データ: ロード中...</li>
     </ul>
 
-    <p id="ipInfo" class="mt-3">IP情報: ロード中...</p>
+    <div id="ipInfo" class="mt-3">
+      <h3>IP情報</h3>
+      <ul class="list-group">
+        <li class="list-group-item">言語: <span id="browserLanguage"></span></li>
+        <li class="list-group-item">ブラウザ名: <span id="browserName"></span></li>
+        <li class="list-group-item">ユーザーエージェント: <span id="browserUserAgent"></span></li>
+        <li class="list-group-item">ブラウザバージョン: <span id="browserVersion"></span></li>
+        <li class="list-group-item">現在のURL: <span id="currentURL"></span></li>
+        <li class="list-group-item">IPアドレス: <span id="ipAddress"></span></li>
+        <li class="list-group-item">ページの起点: <span id="pageOrigin"></span></li>
+        <li class="list-group-item">クエリパラメータ: <span id="queryParameters"></span></li>
+        <li class="list-group-item">リファラ: <span id="referrer"></span></li>
+        <li class="list-group-item">画面の高さ: <span id="screenHeight"></span></li>
+        <li class="list-group-item">画面の幅: <span id="screenWidth"></span></li>
+      </ul>
+    </div>
   </div>
 
   <script>
@@ -85,7 +100,19 @@
 
         // IP情報を表示
         const ipInfo = document.getElementById('ipInfo');
-        ipInfo.textContent = `IP情報: ${questionsData.ipInfo.ipAddress}`;
+        ipInfo.style.display = 'block'; // IP情報を表示
+        const ipData = questionsData.ipInfo;
+        document.getElementById('browserLanguage').textContent = ipData.browserLanguage;
+        document.getElementById('browserName').textContent = ipData.browserName;
+        document.getElementById('browserUserAgent').textContent = ipData.browserUserAgent;
+        document.getElementById('browserVersion').textContent = ipData.browserVersion;
+        document.getElementById('currentURL').textContent = ipData.currentURL;
+        document.getElementById('ipAddress').textContent = ipData.ipAddress;
+        document.getElementById('pageOrigin').textContent = ipData.pageOrigin;
+        document.getElementById('queryParameters').textContent = ipData.queryParameters;
+        document.getElementById('referrer').textContent = ipData.referrer;
+        document.getElementById('screenHeight').textContent = ipData.screenHeight;
+        document.getElementById('screenWidth').textContent = ipData.screenWidth;
       });
     });
   </script>
