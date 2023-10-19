@@ -38,11 +38,19 @@
   </div>
   <script>
     // Firebaseの設定
-    const config = { apiKey: "AIzaSyDT5SdSajGPPTzgyZb-XO4xabAY6B0bewI", authDomain: "hamanan-10983.firebaseapp.com", databaseURL: "https://hamanan-10983-default-rtdb.firebaseio.com", projectId: "hamanan-10983", storageBucket: "hamanan-10983.appspot.com", messagingSenderId: "181655797156", appId: "1:181655797156:web:f1025f6db4772ba3539531" };
+    const config = {
+      apiKey: "AIzaSyDT5SdSajGPPTzgyZb-XO4xabAY6B0bewI",
+      authDomain: "hamanan-10983.firebaseapp.com",
+      databaseURL: "https://hamanan-10983-default-rtdb.firebaseio.com",
+      projectId: "hamanan-10983",
+      storageBucket: "hamanan-10983.appspot.com",
+      messagingSenderId: "181655797156",
+      appId: "1:181655797156:web:f1025f6db4772ba3539531"
+    };
 
     // Firebaseを初期化
     firebase.initializeApp(config);
-    
+
     // クリックイベントを"データ取得"ボタンに追加
     document.getElementById('get').addEventListener('click', () => {
       // Firebaseデータベースへの参照を取得
@@ -69,17 +77,21 @@
         const ipInfo = document.getElementById('ipInfo');
         ipInfo.style.display = 'block'; // IP情報を表示
         const ipData = questionsData.ipInfo;
-        document.getElementById('browserLanguage').textContent = ipData.browserLanguage;
-        document.getElementById('browserName').textContent = ipData.browserName;
-        document.getElementById('browserUserAgent').textContent = ipData.browserUserAgent;
-        document.getElementById('browserVersion').textContent = ipData.browserVersion;
-        document.getElementById('currentURL').textContent = ipData.currentURL;
-        document.getElementById('ipAddress').textContent = ipData.ipAddress;
-        document.getElementById('pageOrigin').textContent = ipData.pageOrigin;
-        document.getElementById('queryParameters').textContent = ipData.queryParameters;
-        document.getElementById('referrer').textContent = ipData.referrer;
-        document.getElementById('screenHeight').textContent = ipData.screenHeight;
-        document.getElementById('screenWidth').textContent = ipData.screenWidth;
+        if (ipData) {
+          document.getElementById('browserLanguage').textContent = ipData.browserLanguage || '未定義';
+          document.getElementById('browserName').textContent = ipData.browserName || '未定義';
+          document.getElementById('browserUserAgent').textContent = ipData.browserUserAgent || '未定義';
+          document.getElementById('browserVersion').textContent = ipData.browserVersion || '未定義';
+          document.getElementById('currentURL').textContent = ipData.currentURL || '未定義';
+          document.getElementById('ipAddress').textContent = ipData.ipAddress || '未定義';
+          document.getElementById('pageOrigin').textContent = ipData.pageOrigin || '未定義';
+          document.getElementById('queryParameters').textContent = ipData.queryParameters || '未定義';
+          document.getElementById('referrer').textContent = ipData.referrer || '未定義';
+          document.getElementById('screenHeight').textContent = ipData.screenHeight || '未定義';
+          document.getElementById('screenWidth').textContent = ipData.screenWidth || '未定義';
+        } else {
+          console.error('IP情報が存在しません。');
+        }
       });
     });
   </script>
