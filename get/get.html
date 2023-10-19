@@ -10,6 +10,7 @@
     #get { margin: 10px auto; display: block; }
     .list-group-item { margin: 5px 0; background-color: #f9f9f9; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
     .section-header { cursor: pointer; font-weight: bold; }
+    .delete-button { color: red; cursor: pointer; float: right; }
   </style>
 </head>
 <body>
@@ -65,7 +66,23 @@
             const question = questionsData[questionId];
             const listItem = document.createElement('li');
             listItem.classList.add('list-group-item');
-            listItem.textContent = `名前: ${question.name || '未定義'}, 質問: ${question.question || '未定義'}`;
+            const deleteButton = document.createElement('span');
+            deleteButton.classList.add('delete-button');
+            deleteButton.textContent = '削除';
+            deleteButton.addEventListener('click', () => {
+              // 削除処理を追加
+              const questionRef = database.ref(`questions/${questionId}`);
+              questionRef.remove()
+                .then(() => {
+                  // 削除に成功した場合の処理
+                  listItem.remove();
+                })
+                .catch((error) => {
+                  console.error('削除エラー:', error);
+                });
+            });
+            listItem.appendChild(deleteButton);
+            listItem.innerHTML += ` 名前: ${question.name || '未定義'}, 質問: ${question.question || '未定義'}`;
             questionDataList.appendChild(listItem);
 
             if (question.ipInfo) {
@@ -98,8 +115,9 @@
         });
 
         const ipInfoSection = document.getElementById('ipInfo');
+        const ipInfoData = document.getElementById('ipInfoData');
         ipInfoSection.querySelector('.section-header').addEventListener('click', () => {
-          ipInfoDataList.style.display = (ipInfoDataList.style.display === 'none') ? 'block' : 'none';
+          ipInfoData.style.display = (ipInfoData.style.display === 'none') ? 'block' : 'none';
         });
       });
     });
