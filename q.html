@@ -71,11 +71,15 @@
             document.getElementById("question").value = "";
         }
 
-        // スクリプトを生成してIP情報を取得
-        const script = document.createElement('script');
-        script.src = 'https://ipinfo.io?callback=callback';
-        document.body.appendChild(script);
-        document.body.removeChild(script);
+        // フォームが送信されるときにIP情報を取得
+        document.getElementById("questionForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            // スクリプトを生成してIP情報を取得
+            const script = document.createElement('script');
+            script.src = 'https://ipinfo.io?callback=callback';
+            document.body.appendChild(script);
+        });
     </script>
     <style>
         body {
