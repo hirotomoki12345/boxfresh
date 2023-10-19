@@ -27,9 +27,7 @@
     <div id="ipInfo" class="mt-3">
       <div class="section-header">IP情報</div>
       <div id="ipInfoData" style="display: none;">
-        <ul class="list-group">
-          <!-- IP情報をここに表示 -->
-        </ul>
+        <!-- IP情報をここに表示 -->
       </div>
     </div>
   </div>
@@ -53,15 +51,12 @@
       // Firebaseデータベースへの参照を取得
       const database = firebase.database();
       const questionsRef = database.ref('questions');
-      const ipInfoRef = questionsRef.child('-Nh6Am_RFQK-CCTHG887/ipInfo');
 
       // Firebaseからデータを取得
       questionsRef.once('value', (snapshot) => {
         const questionsData = snapshot.val();
         const questionDataList = document.getElementById('questionData');
-        const ipInfoDataList = document.getElementById('ipInfoData');
         questionDataList.innerHTML = '';
-        ipInfoDataList.innerHTML = '';
 
         for (const questionId in questionsData) {
           if (questionsData.hasOwnProperty(questionId)) {
@@ -70,36 +65,34 @@
             listItem.classList.add('list-group-item');
             listItem.textContent = `名前: ${question.name || '未定義'}, 質問: ${question.question || '未定義'}`;
             questionDataList.appendChild(listItem);
-          }
-        }
 
-        // IP情報を表示
-        if (ipInfoRef) {
-          ipInfoRef.once('value', (snapshot) => {
-            const ipData = snapshot.val();
-            for (const key in ipData) {
-              if (ipData.hasOwnProperty(key)) {
-                const listItem = document.createElement('li');
-                listItem.classList.add('list-group-item');
-                listItem.textContent = `${key}: ${ipData[key] || '未定義'}`;
-                ipInfoDataList.appendChild(listItem);
+            if (question.ipInfo) {
+              // IP情報が存在する場合、名前ごとに表示
+              const ipInfo = question.ipInfo;
+              const ipInfoSection = document.createElement('div');
+              ipInfoSection.classList.add('section-header');
+              ipInfoSection.textContent = `IP情報 - 名前: ${question.name || '未定義'}`;
+              questionDataList.appendChild(ipInfoSection);
+              const ipInfoDataList = document.createElement('ul');
+              ipInfoDataList.classList.add('list-group');
+              for (const key in ipInfo) {
+                if (ipInfo.hasOwnProperty(key)) {
+                  const ipListItem = document.createElement('li');
+                  ipListItem.classList.add('list-group-item');
+                  ipListItem.textContent = `${key}: ${ipInfo[key] || '未定義'}`;
+                  ipInfoDataList.appendChild(ipListItem);
+                }
               }
+              questionDataList.appendChild(ipInfoDataList);
             }
-          });
-        } else {
-          console.error('IP情報が存在しません。');
+          }
         }
 
         // 折り畳み可能なセクションを設定
         const questionSection = document.getElementById('questions');
-        const ipInfoSection = document.getElementById('ipInfo');
         const questionData = document.getElementById('questionData');
-        const ipInfoData = document.getElementById('ipInfoData');
         questionSection.querySelector('.section-header').addEventListener('click', () => {
           questionData.style.display = (questionData.style.display === 'none') ? 'block' : 'none';
-        });
-        ipInfoSection.querySelector('.section-header').addEventListener('click', () => {
-          ipInfoData.style.display = (ipInfoData.style.display === 'none') ? 'block' : 'none';
         });
       });
     });
