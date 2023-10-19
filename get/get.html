@@ -1,37 +1,85 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>質問データ取得と削除</title>
+  <title>データ取得サイト</title>
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-  <style>
-    h1 { text-align: center; }
-    #get { margin: 10px auto; display: block; }
-    .list-group-item { margin: 5px 0; background-color: #f9f9f9; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
-    .section-header { cursor: pointer; font-weight: bold; }
-    .delete-button { color: red; cursor: pointer; float: right; }
-  </style>
 </head>
 <body>
+
   <div class="container">
-    <h1>質問データ取得と削除</h1>
+    <h1>質問データ取得</h1>
+
     <button id="get" class="btn btn-primary">データ取得</button>
-    <div id="questions" class="mt-3">
-      <div class="section-header">質問データ</div>
-      <div id="questionData" style="display: none;">
-        <ul class="list-group">
-          <!-- 質問データをここに表示 -->
-        </ul>
+
+    <div class="card mt-3">
+      <div class="card-header" id="ipHeading">
+        <h2 class="mb-0">
+          <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#ipCollapse" aria-expanded="true" aria-controls="ipCollapse">
+            IP情報
+          </button>
+        </h2>
+      </div>
+
+      <div id="ipCollapse" class="collapse" aria-labelledby="ipHeading">
+        <div class="card-body">
+          <p id="ipInfo">IP情報: ロード中...</p>
+        </div>
       </div>
     </div>
-    <div id="ipInfo" class="mt-3">
-      <div class="section-header">IP情報</div>
-      <div id="ipInfoData" style="display: none;">
-        <!-- IP情報をここに表示 -->
+
+    <div class="card mt-3">
+      <div class="card-header" id="browserHeading">
+        <h2 class="mb-0">
+          <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#browserCollapse" aria-expanded="true" aria-controls="browserCollapse">
+            ブラウザ情報
+          </button>
+        </h2>
+      </div>
+
+      <div id="browserCollapse" class="collapse" aria-labelledby="browserHeading">
+        <div class="card-body">
+          <p id="browserInfo">ブラウザ情報: ロード中...</p>
+        </div>
       </div>
     </div>
+
+    <div class="card mt-3">
+      <div class="card-header" id="urlHeading">
+        <h2 class="mb-0">
+          <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#urlCollapse" aria-expanded="true" aria-controls="urlCollapse">
+            URL情報
+          </button>
+        </h2>
+      </div>
+
+      <div id="urlCollapse" class="collapse" aria-labelledby="urlHeading">
+        <div class="card-body">
+          <p id="urlInfo">URL情報: ロード中...</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-3">
+      <div class="card-header" id="otherHeading">
+        <h2 class="mb-0">
+          <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#otherCollapse" aria-expanded="true" aria-controls="otherCollapse">
+            その他の情報
+          </button>
+        </h2>
+      </div>
+
+      <div id="otherCollapse" class="collapse" aria-labelledby="otherHeading">
+        <div class="card-body">
+          <p id="otherInfo">その他の情報: ロード中...</p>
+        </div>
+      </div>
+    </div>
+
+    <ul id="questions" class="list-group mt-3"></ul>
   </div>
+
   <script>
     // Firebaseの設定
     const config = {
@@ -46,59 +94,16 @@
 
     // Firebaseを初期化
     firebase.initializeApp(config);
+    
+    // Firebaseデータベースへの参照を取得
+    const database = firebase.database();
+    const questionsRef = database.ref('questions/-Nh6Am_RFQK-CCTHG887');
 
     // クリックイベントを"データ取得"ボタンに追加
     document.getElementById('get').addEventListener('click', () => {
-      const database = firebase.database();
-      const questionsRef = database.ref('questions');
+      // Firebaseからデータを取得
       questionsRef.once('value', (snapshot) => {
-        const questionsData = snapshot.val();
-        const questionDataList = document.getElementById('questionData');
-        questionDataList.innerHTML = '';
-        const ipInfoDataList = document.getElementById('ipInfoData');
-        ipInfoDataList.innerHTML = '';
+        const data = snapshot.val();
 
-        for (const questionId in questionsData) {
-          if (questionsData.hasOwnProperty(questionId)) {
-            const question = questionsData[questionId];
-            const listItem = document.createElement('li');
-            listItem.classList.add('list-group-item');
-            const deleteButton = document.createElement('span');
-            deleteButton.classList.add('delete-button');
-            deleteButton.textContent = '削除';
-
-            // 削除ボタンをクリックした際の処理
-            deleteButton.addEventListener('click', () => {
-              const questionRef = database.ref(`questions/${questionId}`);
-              questionRef.remove()
-                .then(() => {
-                  listItem.remove();
-                })
-                .catch((error) => {
-                  console.error('削除エラー:', error);
-                });
-            });
-
-            listItem.appendChild(deleteButton);
-            listItem.innerHTML += ` 名前: ${question.name || '未定義'}, 質問: ${question.question || '未定義'}`;
-            questionDataList.appendChild(listItem);
-          }
-        }
-
-        // 折り畳み可能なセクションを設定
-        const questionSection = document.getElementById('questions');
-        const questionData = document.getElementById('questionData');
-        questionSection.querySelector('.section-header').addEventListener('click', () => {
-          questionData.style.display = (questionData.style.display === 'none') ? 'block' : 'none';
-        });
-
-        const ipInfoSection = document.getElementById('ipInfo');
-        const ipInfoData = document.getElementById('ipInfoData');
-        ipInfoSection.querySelector('.section-header').addEventListener('click', () => {
-          ipInfoData.style.display = (ipInfoData.style.display === 'none') ? 'block' : 'none';
-        });
-      });
-    });
-  </script>
-</body>
-</html>
+        // IP情報を表示
+        const ipInfo = document.getElementById('
