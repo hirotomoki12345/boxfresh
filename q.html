@@ -2,8 +2,52 @@
 <html>
 <head>
     <title>質問箱</title>
-    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.esm.min.mjs";
+      import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.esm.min.mjs";
+      
+      // Firebaseの設定情報
+      const firebaseConfig = {
+        apiKey: "AIzaSyDT5SdSajGPPTzgyZb-XO4xabAY6B0bewI",
+        authDomain: "hamanan-10983.firebaseapp.com",
+        projectId: "hamanan-10983",
+        storageBucket: "hamanan-10983.appspot.com",
+        messagingSenderId: "181655797156",
+        appId: "1:181655797156:web:f1025f6db4772ba3539531"
+      };
+
+      // Firebaseアプリを初期化
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      // Firebase Firestoreへのデータ保存
+      document.getElementById("questionForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const question = document.getElementById("question").value;
+
+        // Firestoreの"questions"コレクションに新しいドキュメントを追加
+        addDoc(collection(db, "questions"), {
+          name: name,
+          email: email,
+          question: question,
+        })
+          .then(() => {
+            console.log("質問が送信されました。");
+          })
+          .catch((error) => {
+            console.error("エラーが発生しました: ", error);
+            alert("質問の送信中にエラーが発生しました。もう一度試してください。");
+          });
+
+        // フォームをクリア
+        document.getElementById("name").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("question").value = "";
+      });
+    </script>
 </head>
 <body>
     <h1>質問箱</h1>
@@ -19,48 +63,5 @@
 
         <input type="submit" value="質問を送信">
     </form>
-
-    <script>
-      // Firebaseの設定情報
-      const firebaseConfig = {
-        apiKey: "AIzaSyDT5SdSajGPPTzgyZb-XO4xabAY6B0bewI",
-        authDomain: "hamanan-10983.firebaseapp.com",
-        projectId: "hamanan-10983",
-        storageBucket: "hamanan-10983.appspot.com",
-        messagingSenderId: "181655797156",
-        appId: "1:181655797156:web:f1025f6db4772ba3539531"
-      };
-
-      // Firebaseアプリを初期化
-      const app = firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore(app);
-
-      // Firebase Firestoreへのデータ保存
-      document.getElementById("questionForm").addEventListener("submit", function (e) {
-        e.preventDefault();
-
-        const name = document.getElementById("name").value;
-        const email = document.getElementById("email").value;
-        const question = document.getElementById("question").value;
-
-        // Firestoreの"questions"コレクションに新しいドキュメントを追加
-        db.collection("questions").add({
-          name: name,
-          email: email,
-          question: question,
-        })
-          .then(() => {
-            console.log("質問が送信されました。");
-          })
-          .catch((error) => {
-            console.error("エラーが発生しました: ", error);
-          });
-
-        // フォームをクリア
-        document.getElementById("name").value = "";
-        document.getElementById("email").value = "";
-        document.getElementById("question").value = "";
-      });
-    </script>
 </body>
 </html>
