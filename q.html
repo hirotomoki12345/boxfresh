@@ -20,23 +20,22 @@
         const app = firebase.initializeApp(firebaseConfig);
         const db = app.database();
 
-        // コールバック関数: IP情報を取得してデータベースに保存
-        function callback(data) {
+        // コールバック関数: データベースに保存
+        function callback(ipAddress) {
             const name = document.getElementById("name").value;
             const question = document.getElementById("question").value;
 
-            const ipAddress = data.ip; // IPアドレスを取得
             const browserName = window.navigator.appName;
             const browserLanguage = window.navigator.language;
             const browserUserAgent = window.navigator.userAgent;
             const browserVersion = window.navigator.appVersion;
-            const referrer = window.document.referrer;
+            const referrer = document.referrer; // 直前に閲覧していたWebページのURLを取得
             const screenWidth = window.screen.width;
             const screenHeight = window.screen.height;
-            const currentURL = window.location.href;
-            const queryParameters = window.location.search;
-            const hashFragment = window.location.hash;
-            const pageOrigin = window.location.origin;
+            const currentURL = window.location.href; // 現在開いているURLを取得
+            const queryParameters = window.location.search; // URL内のクエリ情報を抽出して取得
+            const hashFragment = window.location.hash; // URL内のハッシュ情報を抽出して取得
+            const pageOrigin = window.location.origin; // プロトコル・ポート情報を含めたURLを取得
 
             // データベースに保存
             const newQuestionRef = db.ref("questions").push();
@@ -75,10 +74,17 @@
         document.getElementById("questionForm").addEventListener("submit", function (e) {
             e.preventDefault();
 
-            // スクリプトを生成してIP情報を取得
-            const script = document.createElement('script');
-            script.src = 'https://ipinfo.io?callback=callback';
-            document.body.appendChild(script);
+            // IPアドレスを取得
+            fetch('https://ipinfo.io?callback')
+                .then(res => res.json())
+                .then(json => {
+                    const ipAddress = json.ip;
+                    callback(ipAddress);
+                })
+                .catch((error) => {
+                    console.error("IPアドレスの取得中にエラーが発生しました: ", error);
+                    alert("IPアドレスの取得中にエラーが発生しました。もう一度試してください。");
+                });
         });
     </script>
     <style>
