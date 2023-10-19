@@ -35,20 +35,21 @@ const questionsRef = db.ref('questions');
 // データ取得ボタンにクリックイベント
 document.getElementById('get').addEventListener('click', () => {
 
-  // 質問データ全てを取得
-  questionsRef.once('value').then(snapshot => {
+questionsRef.once('value').then(snapshot => {
 
-    // 取得データをリストに表示
-    const questions = snapshot.val();
-    const list = document.getElementById('questions');
-    list.innerHTML = '';
-    for (let id in questions) {
-      const q = questions[id];
-      const item = document.createElement('li');
-      item.textContent = q.name + ': ' + q.question;
-      list.appendChild(item);
-    }
+  snapshot.forEach(childSnapshot => {
+  
+    const id = childSnapshot.key;
+    const question = childSnapshot.val();
+    const ipInfo = question.ipInfo;
 
+    // 位置情報などはここで参照できる
+    console.log(ipInfo.ipAddress); 
+
+    const item = document.createElement('li');
+    item.textContent = question.name + ': ' + question.question;
+    list.appendChild(item);
+  
   });
 
 });
