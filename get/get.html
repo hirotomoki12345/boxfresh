@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>質問一覧</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #questionList {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .question {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>質問一覧</h1>
+    <div id="questionList">
+        <!-- 質問がここに表示されます -->
+    </div>
+</body>
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+<script>
+  // Firebaseの設定情報
+  const firebaseConfig = {
+    apiKey: "AIzaSyDT5SdSajGPPTzgyZb-XO4xabAY6B0bewI",
+    authDomain: "hamanan-10983.firebaseapp.com",
+    databaseURL: "https://hamanan-10983-default-rtdb.firebaseio.com",
+    projectId: "hamanan-10983",
+    storageBucket: "hamanan-10983.appspot.com",
+    messagingSenderId: "181655797156",
+    appId: "1:181655797156:web:f1025f6db4772ba3539531"
+  };
+
+  // Firebaseアプリを初期化
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = app.database();
+
+  // 質問一覧を取得
+  const questionList = document.getElementById("questionList");
+  const questionsRef = db.ref("questions");
+
+  questionsRef.on("value", (snapshot) => {
+    questionList.innerHTML = ""; // 一度リストをクリア
+
+    snapshot.forEach((childSnapshot) => {
+      const questionData = childSnapshot.val();
+      const questionElement = document.createElement("div");
+      questionElement.classList.add("question");
+      questionElement.innerHTML = `
+        <strong>ニックネーム:</strong> ${questionData.name}<br>
+        <strong>質問:</strong> ${questionData.question}
+      `;
+      questionList.appendChild(questionElement);
+    });
+  });
+</script>
+</html>
