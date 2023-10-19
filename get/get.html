@@ -6,64 +6,69 @@
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
-    margin: 0;
-    padding: 0;
-  }
-  h1 {
-    text-align: center;
-    font-size: 36px;
-    margin-top: 20px;
-    color: #333;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-  }
-  .container {
-    margin: 20px auto;
-    max-width: 800px;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  }
-  #get {
-    display: block;
-    margin: 20px auto;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  #get:hover {
-    background-color: #0056b3;
-  }
-  .list-group-item {
-    background-color: #ffffff;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin: 10px 0;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  }
-  .section-header {
-    cursor: pointer;
-    font-weight: bold;
-    background-color: #f5f5f5;
-    padding: 10px;
-    border-radius: 5px;
-    margin: 10px 0;
-  }
-  .delete-button {
-    color: red;
-    cursor: pointer;
-    float: right;
-    font-weight: bold;
-  }
-</style>
+/* フォント */
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+}
+
+/* カード */
+.question-card {
+  background: #FFFFFF;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  border: 1px solid #DBDBDB;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+/* 質問者情報 */  
+.question-user {
+  display: flex;
+  align-items: center; 
+}
+
+.user-icon {
+  width: 40px;
+  height: 40px;  
+  border-radius: 50%;
+  border: 1px solid #DBDBDB;
+}
+
+.user-name {
+  margin-left: 8px;
+  font-weight: bold;
+}
+
+/* 質問文 */
+.question-text {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* 投稿フォーム */
+.post-form {
+  background: #FAFAFA;
+  border: 1px solid #DBDBDB;
+  border-radius: 10px;
+  padding: 8px 16px;  
+}
+
+.post-form input,
+.post-form button {
+  appearance: none;
+  border: none;
+  outline: none;
+  background: none;
+}
+
+.post-button {
+  color: #FFFFFF;
+  background: #0095F6;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;  
+}
+
+</style>  
 
 </head>
 <body>
