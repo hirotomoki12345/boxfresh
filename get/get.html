@@ -6,28 +6,65 @@
   <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 <style>
+
 /* 全体のスタイル */
 
 body {
   font-family: 'Noto Sans JP', sans-serif;
-  background-color: #fafafa; 
+  background-color: #FAFAFA;  
 }
 
-/* カード */
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* タイトル */
+
+h1 {
+  font-size: 32px;
+  text-align: center;
+  color: #0095f6;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+/* 取得ボタン */
+
+#get {
+  display: block;
+  max-width: 200px;
+  margin: 20px auto;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background-color: #0095f6;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#get:hover {
+  opacity: 0.8;
+}
+
+/* 質問カード */
 
 .question-card {
   background-color: #fff;
   border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   padding: 20px;
-  margin-bottom: 20px; 
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
 }
 
 /* 質問者情報 */
 
 .question-user {
   display: flex;
-  align-items: center;
+  align-items: center;  
   margin-bottom: 10px;
 }
 
@@ -35,34 +72,80 @@ body {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  border: 2px solid #eee;
+  border: 2px solid #eee; 
   margin-right: 10px;
 }
 
 .user-name {
-  font-weight: bold;
   font-size: 18px;
-  color: #0066cc;
-}  
+  font-weight: bold;
+  color: #333;
+}
 
 /* 質問文 */
 
 .question-text {
   font-size: 16px;
+  color: #444;
   line-height: 1.5;
-  margin-bottom: 10px;  
+  margin-bottom: 10px;
 }
+
+/* 削除ボタン */
+
+.delete-button {
+  float: right;
+  color: #fff;
+  background-color: #f44336;
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: 0.3s;  
+}
+
+.delete-button:hover {
+  opacity: 0.8;
+}
+
 
 /* 投稿フォーム */
 
 .post-form {
-  background-color: #f0f0f0;
+  background-color: #fafafa;
   padding: 20px;
   border-radius: 10px;
-  margin-top: 20px; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-top: 20px;  
 }
 
-/* 各要素のスタイル */
+/* 入力欄 */
+
+.post-input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  border: none;
+  background-color: #fff;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 送信ボタン */ 
+
+.post-button {
+  float: right;
+  padding: 12px;
+  border-radius: 6px;
+  border: none;
+  background-color: #0095f6;
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.post-button:hover {
+  opacity: 0.8;
+}
 </style>  
 
 </head>
