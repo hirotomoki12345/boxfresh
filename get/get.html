@@ -73,7 +73,7 @@
               questionRef.remove()
                 .then(() => {
                   listItem.remove();
-                  const ipInfoRef = database.ref(`questions/${questionId}`);
+                  const ipInfoRef = database.ref(`ipInfo/${questionId}`);
                   ipInfoRef.remove()
                     .then(() => {
                       console.log('ipInfoも削除しました');
@@ -90,25 +90,6 @@
             listItem.appendChild(deleteButton);
             listItem.innerHTML += ` 名前: ${question.name || '未定義'}, 質問: ${question.question || '未定義'}`;
             questionDataList.appendChild(listItem);
-
-            if (question.ipInfo) {
-              const ipInfo = question.ipInfo;
-              const ipInfoSection = document.createElement('div');
-              ipInfoSection.classList.add('section-header');
-              ipInfoSection.textContent = `IP情報 - 名前: ${question.name || '未定義'}`;
-              ipInfoDataList.appendChild(ipInfoSection);
-              const ipInfoData = document.createElement('ul');
-              ipInfoData.classList.add('list-group');
-              for (const key in ipInfo) {
-                if (ipInfo.hasOwnProperty(key)) {
-                  const ipListItem = document.createElement('li');
-                  ipListItem.classList.add('list-group-item');
-                  ipListItem.textContent = `${key}: ${ipInfo[key] || '未定義'}`;
-                  ipInfoData.appendChild(ipListItem);
-                }
-              }
-              ipInfoDataList.appendChild(ipInfoData);
-            }
           }
         }
 
